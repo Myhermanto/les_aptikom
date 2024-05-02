@@ -117,6 +117,13 @@ class User extends MX_Controller
         );
         $this->load->view('layout/wrapper', $data);
     }
+   public function hapus_user()
+    {
+        $kode = $this->input->post('xkode');
+        $this->db->query("DELETE FROM users where id_user='$kode'");
+        $this->session->set_flashdata('message', 'warning');
+        redirect('user-akses-aptikom-admin.js');
+    }
 
     function logout()
     {
