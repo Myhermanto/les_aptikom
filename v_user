@@ -10,8 +10,9 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="javascript:void(0)">User & Akses</a></li>
                         <li class="breadcrumb-item active">user</li>
-                    </ol>
 
+                    </ol>
+                    <a href="#" data-toggle="modal" data-backdrop="false" data-target="#addinfo" button type="button" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Tambah Baru</a>
 
                 </div>
             </div>
@@ -20,6 +21,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+
                         <h4 class="card-title"> Data User & Akses</h4>
                         <h6 class="card-subtitle">Export data to Copy, CSV, Excel, PDF & Print</h6>
                         <div class="table-responsive m-t-40">
@@ -87,6 +89,63 @@
         </div>
     </div>
 
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="form-group">
+
+            <div class="modal fade text-left" id="addinfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success white">
+                            <h4 class="modal-title white" id="myModalLabel11">Tambah Informasi Beranda </h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form action="<?php echo base_url() . 'user/save_user' ?>" method="post" enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <div class="col-md-12 m-b-20">
+
+
+                                    <div class="form-group">
+                                        <label for="accountTextarea">Nama Lengkap</label>
+                                        <input type="text" id="projectinput1" class="form-control" placeholder="Masukan judul" name="xjudul" required>
+
+                                    </div>
+                                    
+
+                                    <div class="form-group">
+                                        <label for="accountTextarea">Status</label>
+                                        <select class="form-control" name="xstatus" required>
+                                            <option value="1" selected>Aktif</option>
+                                            <option value="2">Tidak Aktif</option>
+
+                                        </select>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="accountTextarea">File</label>
+                                        <input type="file" name="filedokumen" class="form-control">
+
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-info">Simpan</button>
+                                <button type="button" class="btn grey btn-outline-danger" data-dismiss="modal">Batal</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <?php
     foreach ($data->result() as $row) :
     ?>
