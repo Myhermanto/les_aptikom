@@ -30,8 +30,15 @@
                                 <label for="example-search-input" class="col-2 col-form-label">Akses User</label>
                                 <div class="col-10">
                                     <select class="form-control" name="xrole" required>
-                                        <option>admin</option>
-                                        <option>user</option>
+
+                                        <?php
+
+                                        $ambilrole = $this->db->query('select*from role');
+
+                                        foreach ($ambilrole->result() as $row) :
+                                        ?>
+                                            <option value="<?= $row->id_role ?>"><?= $row->nama_role ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
