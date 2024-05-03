@@ -1,254 +1,237 @@
-<div class="page-wrapper">
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
-    <div class="container-fluid">
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h4 class="text-themecolor">Data user</h4>
-            </div>
-            <div class="col-md-7 align-self-center text-right">
-                <div class="d-flex justify-content-end align-items-center">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">User & Akses</a></li>
-                        <li class="breadcrumb-item active">user</li>
-
-                    </ol>
-                    <a href="<?= base_url() ?>add-user-admin.js" type="button" class="btn btn-info d-none d-lg-block m-l-15"><i class="fa fa-plus-circle"></i> Tambah Baru</a>
-
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-
-                        <h4 class="card-title"> Data User & Akses</h4>
-                        <h6 class="card-subtitle">Export data to Copy, CSV, Excel, PDF & Print</h6>
-                        <div class="table-responsive m-t-40">
-                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Reset Password</th>
-
-                                        <th>Nama</th>
-                                        <th>Akses</th>
-                                        <th>Username</th>
-                                        <th>Status</th>
-                                        <th>Tgl Create</th>
-                                        <th style="text-align:center;">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Reset Password</th>
-
-                                        <th>Nama</th>
-                                        <th>Akses</th>
-                                        <th>Username</th>
-                                        <th>Status</th>
-                                        <th>Tgl Create</th>
-                                        <th style="text-align:center;">Aksi</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    <?php
-                                    $no = 0;
-                                    foreach ($data->result() as $row) :
-                                        $no++;
-                                    ?>
-                                        <tr>
-                                            <td><?= $no ?></td>
-                                            <td> <a href="#" data-toggle="modal" data-backdrop="false" data-target="#reset<?= $row->id_user ?>" class="btn mr-1 mb-1 btn-outline-danger btn-sm"><i class="la la-link"></i> Reset Password</a>
-                                            </td>
-                                            <td><?= $row->nama_user ?></td>
-
-                                            <td><?= $row->nama_role ?></td>
-                                            <td><?= $row->username ?></td>
-                                            <td style="text-align:center;">
-                                                <?php
-                                                if ($row->status_user == '1') {
-                                                ?>
-                                                    <h4>
-                                                        <center><a href="#" data-toggle="modal" data-backdrop="false" data-target="#status<?= $row->id_user ?>" class="mr-1 mb-1 btn btn-outline-success btn-min-width"><i class="la la-check-square-o"></i>
-                                                                Aktif</a>
-                                                        </center>
-                                                    </h4>
-
-                                                <?php
-
-                                                } else {
-                                                ?>
-                                                    <h4>
-                                                        <center> <a href="#" data-toggle="modal" data-backdrop="false" data-target="#status<?= $row->id_user ?>" class="mr-1 mb-1 btn btn-outline-warning btn-min-width"><i class="la la-times-circle-o"></i>
-                                                                Tidak Aktif</a></center>
-                                                    </h4>
-                                                <?php
-
-                                                }
-                                                ?>
-
-                                            </td>
-                                            <td><?= $row->tgl_create ?></td>
-                                            <td style="text-align:center;"><a href="<?php echo base_url() . 'edit-data-user-admin-' . $row->id_user . '.js' ?>" class="btn btn-outline-success">
-                                                    <i class="fa  fa-pencil "></i> Edit
-                                                </a> |
-                                                <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete<?php echo $row->id_user; ?>"> <i class="fa  fa-trash "></i> Hapus</button>
-                                            </td>
+class User extends MX_Controller
+{
 
 
-                                        </tr>
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->library('form_validation');
+        $this->load->model('M_data');
+    }
+    function index()
+    {
+
+        if ($this->session->userdata('username') != '' && $this->session->userdata('id_role') == '1') {
+            echo "<script>window.location='" . base_url('dashboard.js') . "';</script>";
+        } else if ($this->session->userdata('username') != '' && $this->session->userdata('id_role') == '2') {
+            echo "<script>window.location='" . base_url('halaman-pegawai.js') . "';</script>";
+        } else if ($this->session->userdata('username') != '' && $this->session->userdata('id_role') == '3') {
+            echo "<script>window.location='" . base_url('halaman-pegawai.js') . "';</script>";
+        } else if ($this->session->userdata('username') != '' && $this->session->userdata('id_role') == '4') {
+            echo "<script>window.location='" . base_url('halaman-pegawai.js') . "';</script>";
+        }
+
+        $this->form_validation->set_rules('username', 'Username', 'required|trim', [
+            'required' => 'Username Harus diisi'
+        ]);
+        $this->form_validation->set_rules('password', 'Password', 'required|trim', [
+            'required' => 'Password Harus diisi'
+        ]);
+
+        if ($this->form_validation->run() == false) {
+            $this->load->view('v_login');
+        } else {
+            $this->auth();
+        }
+    }
+
+    function auth()
+    {
+        $username = str_replace("'", "", htmlspecialchars($this->input->post('username'), ENT_QUOTES));
+        $password = str_replace("'", "", htmlspecialchars($this->input->post('password'), ENT_QUOTES));
+        $cadmin =  $this->db->query("SELECT * FROM tbl_user WHERE username='$username' AND password='$password'");
+
+        if ($cadmin->num_rows() > 0) {
+            $this->session->set_userdata('logged_in', true);
+            $this->session->set_userdata('username', $username);
+            $xcadmin = $cadmin->row_array();
+            $cek = $this->db->query("select*from tbl_user where username='$username'")->row();
+            if ($cek->status_user == '1') {
+
+                if ($xcadmin['role_id'] == '1') {
+                    $this->session->set_userdata('akses', '1');
+                    $idadmin = $xcadmin['id_user'];
+                    $username = $xcadmin['username'];
+                    $nama = $xcadmin['nama_user'];
+                    $pt = $xcadmin['role_id'];
+                    $this->session->set_userdata('role_id', $pt);
+                    $this->session->set_userdata('id_user', $idadmin);
+                    $this->session->set_userdata('username', $username);
+                    $this->session->set_userdata('nama_user', $nama);
+                    redirect('dashboard-admin.js');
+                }
+            } else {
+                $this->session->set_flashdata('message', 'warning');
+
+                redirect('login-admin.js');
+            }
+        } else {
+            $this->session->set_flashdata('message', 'error');
+            redirect('login-admin.js');
+        }
+    }
+
+    function gagallogin()
+    {
+        echo $this->session->set_flashdata('message', '<div class="alert alert-primary" role="alert"><button type="button" class="close" data-dismiss="alert"><span class="fa fa-close"></span></button> Username Atau Password Salah</div>');
+        redirect('login.js');
+    }
 
 
+    public function reset_password()
+    {
 
-                                    <?php endforeach; ?>
-                                </tbody>
+        $iduser = $this->session->userdata('id_user');
+        $password = $this->input->post('xpassword');
+        $konfirm_password = $this->input->post('xpassword1');
+        if (empty($password) && empty($konfirm_password)) {
+            $this->session->set_flashdata('message', 'error');
+            redirect('dashboard.js');
+        } elseif ($password != $konfirm_password) {
+            $this->session->set_flashdata('message', 'error');
+            redirect('dashboard.js');
+        } else {
+            $data = array(
+                'password' => md5($password),
+                'pass_64' => base64_encode($password),
+            );
+            $where = array('id_user' => $iduser);
+            $this->db->where($where);
+            $this->db->update('users', $data);
 
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-
-
-            </div>
-        </div>
-    </div>
-
-    <?php
-    foreach ($data->result() as $row) :
-    ?>
-        <div class="col-lg-4 col-md-6 col-sm-12">
-            <div class="form-group">
-
-                <div class="modal fade text-left" id="delete<?php echo $row->id_user; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header bg-warning">
-                                <h4 class="modal-title white" id="myModalLabel11">Hapus Data</h4>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-
-                            <form action="<?php echo base_url() . 'user/hapus_user' ?>" method="post">
-                                <div class="modal-body">
-                                    <div class="col-md-12 m-b-20">
+            $this->session->set_flashdata('message', 'info');
+            redirect('dashboard.js');
+        }
+    }
 
 
-                                        <div class="form-group">
+    function show_user()
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'v_user',
+            'data' => $this->M_data->show_user(),
+        );
+        $this->load->view('layout/wrapper', $data);
+    }
 
-                                            <input type="hidden" name="xkode" value="<?php echo $row->id_user; ?>" />
+    function add_user()
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'user/v_add_user',
+        );
+        $this->load->view('layout/wrapper', $data);
+    }
 
-                                            <p>Apakah Anda yakin mau menghapus Data <b><?php echo $row->nama_user; ?>
-                                                </b> ini ?</p>
-                                        </div>
+    function edit_user($id)
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'user/v_edit_user',
+            'data' => $this->db->query("select*from tbl_user where id_user='$id'")->row(),
+        );
 
+        $this->load->view('layout/wrapper', $data);
+    }
+    public function save_user()
+    {
+        $nama = $this->input->post('xnama', TRUE);
+        $username = $this->input->post('xusername', TRUE);
+        $xrole = $this->input->post('xrole', TRUE);
+        $pass = $this->input->post('xpassword', TRUE);
+        $status = $this->input->post('xstatus', TRUE);
+        $password_user = $pass;
+        $pass_64 = base64_encode($password_user);
+        $pass_md5 = md5($password_user);
+        $tgl = date('Y-m-d H:i:s');
+        $data = [
+            "role_id" => $xrole,
+            "nama_user" => $nama,
+            "username" => $username,
+            "password" => $pass_md5,
+            "pass_64" => $pass_64,
+            "status_user" => $status,
+            "tgl_create" => $tgl,
+        ];
+        $this->M_data->insert_data($data, 'tbl_user');
+        echo $this->session->set_flashdata('message', 'success');
+        redirect('user-akses-aptikom-admin.js');
+    }
 
+    function update_user()
+    {
 
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-outline-danger">Hapus</button>
+        $id = $this->input->post('xid');
+        $nama = $this->input->post('xnama', TRUE);
+        $username = $this->input->post('xusername', TRUE);
+        $xrole = $this->input->post('xrole', TRUE);
+        $pass = $this->input->post('xpassword', TRUE);
+        $status = $this->input->post('xstatus', TRUE);
+        $password_user = $pass;
+        $pass_64 = base64_encode($password_user);
+        $pass_md5 = md5($password_user);
+        $tgl = date('Y-m-d H:i:s');
 
-                                    <button type="button" class="btn grey btn-outline-info" data-dismiss="modal">Batal</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        $where1 = array('id_user' => $id);
+        $data1 = array(
+            "role_id" => $xrole,
+            "nama_user" => $nama,
+            "username" => $username,
+            "password" => $pass_md5,
+            "pass_64" => $pass_64,
+            "status_user" => $status,
+            "tgl_create" => $tgl,
+        );
+        $this->M_data->update_data($where1, $data1, 'tbl_user');
+        echo $this->session->set_flashdata('message', 'info');
+        redirect('user-akses-aptikom-admin.js');
+    }
 
-</div>
+    function resetpassuser()
+    {
+        $kode = $this->input->post('xkode');
+        $password_user = 'pass123';
+        // $password_user = $kode;
+        $pass_64 = base64_encode($password_user);
+        $pass_md5 = md5($password_user);
+        $where = array('id_user' => $kode);
+        $data = array(
+            'password' => $pass_md5,
+            'pass_64' => $pass_64,
+        );
+        echo $this->session->set_flashdata('message', 'info');
+        $this->M_data->update_data($where, $data, 'tbl_user');
+        redirect('user-akses-aptikom-admin.js');
+    }
+    function update_status()
+    {
+        $kode = $this->input->post('xkode');
+        $status = $this->input->post('xstatus');
+        $where = array('id_user' => $kode);
+        $data = array(
+            'status_user' => $status
+        );
+        echo $this->session->set_flashdata('message', 'info');
+        $this->M_data->update_data($where, $data, 'tbl_user');
+        redirect('user-akses-aptikom-admin.js');
+    }
+    public function hapus_user()
+    {
+        $kode = $this->input->post('xkode');
+        $this->db->query("DELETE FROM tbl_user where id_user='$kode'");
+        $this->session->set_flashdata('message', 'warning');
+        redirect('user-akses-aptikom-admin.js');
+    }
 
-
-
-<div class="col-lg-4 col-md-6 col-sm-12">
-    <div class="form-group">
-
-        <div class="modal fade text-left" id="status<?= $row->id_user ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-info white">
-                        <h4 class="modal-title white" id="myModalLabel11">Update Status User <?= $row->nama_user ?></h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
-                    <form action="<?php echo base_url() . 'user/update_status' ?>" method="post">
-                        <div class="modal-body">
-                            <div class="col-md-12 m-b-20">
-
-
-                                <div class="form-group">
-                                    <label for="accountTextarea">Status</label>
-                                    <input type="hidden" name="xkode" value="<?php echo $row->id_user; ?>" />
-
-                                    <select class="form-control" name="xstatus" required>
-                                        <option value="1" selected>Aktif</option>
-                                        <option value="2">Tidak Aktif</option>
-
-
-                                    </select>
-
-                                </div>
-
-
-
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-outline-warning">Update</button>
-
-                            <button type="button" class="btn grey btn-outline-danger" data-dismiss="modal">Batal</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col-lg-4 col-md-6 col-sm-12">
-    <div class="form-group">
-
-        <div class="modal fade text-left" id="reset<?= $row->id_user ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header bg-danger white">
-                        <h4 class="modal-title white" id="myModalLabel11">Reset Password</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
-                    <form action="<?php echo base_url() . 'user/resetpassuser' ?>" method="post">
-                        <div class="modal-body">
-                            <div class="col-md-12 m-b-20">
-
-
-                                <div class="form-group">
-                                    <input type="hidden" name="xkode" value="<?php echo $row->id_user; ?>" />
-                                    <p>Apakah Anda yakin mau reset password <b><?php echo $row->nama_user; ?>
-                                        </b> ini ?</p>
-                                </div>
-
-
-
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-outline-warning">Reset</button>
-
-                            <button type="button" class="btn grey btn-outline-danger" data-dismiss="modal">Batal</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php endforeach; ?>
+    function logout()
+    {
+        $this->session->sess_destroy();
+        $this->session->set_flashdata('message', 'info');
+        $url = base_url('login-admin.js');
+        redirect($url);
+    }
+}
