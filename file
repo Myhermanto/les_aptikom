@@ -1,36 +1,101 @@
-<div class="inner-page-banner-area" style="background-image: url('img/banner/5.jpg');">
-    <div class="container">
-        <div class="pagination-area">
-            <h1>Data Keanggotaan Aptikom</h1>
-            <ul>
-                <li><a href="#">Membership</a> -</li>
-                <li>Keanggotaan</li>
-            </ul>
+<footer>
+    <div class="footer-area-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="footer-box">
+                        <a href="index.html"><img class="img-responsive" src="<?= base_url() ?>themes/img/logo-footer.png" alt="logo"></a>
+                        <div class="footer-about">
+                            <p>Sejarah aptikom kalbar, berdiri sejak tahun 2020.</p>
+                        </div>
+                        <ul class="footer-social">
+                            <li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-linkedin" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-pinterest" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-rss" aria-hidden="true"></i></a></li>
+                            <li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="footer-box">
+                        <h3>Links</h3>
+                        <ul class="featured-links">
+                            <li>
+                                <ul>
+                                    <li><a href="#">Keanggotaan</a></li>
+                                    <li><a href="#">E-votting</a></li>
+                                    <li><a href="#">Konferensi</a></li>
+                                    <li><a href="#">login</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="footer-box">
+                        <h3>Information</h3>
+                        <ul class="corporate-address">
+
+                            <li><i class="fa fa-phone" aria-hidden="true"></i><a href="Phone:(01)800433633"> (01) 800 433 633 </a></li>
+
+                            <li><i class="fa fa-envelope-o" aria-hidden="true"></i>aptikomkalbar@gmail.com</li>
+
+
+                            <li><i class="fa fa-maps" aria-hidden="true"></i>Pontianak, Indonesia</li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <div class="footer-box">
+                        <h3>Statistik Pengujung</h3>
+                        <ul class="flickr-photos">
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="registration-page-area bg-secondary">
-    <div class="container">
-        <h2 class="sidebar-title">Data Keanggotaan</h2>
-        <div class="table-responsive">
-            <table class="table table-striped" id="display">
-                <thead>
-                    <tr>
-                        <th style="text-align: center;">No</th>
-                        <th style="text-align: center;">Nomor Anggota</th>
-                        <th style="text-align: center;">Nama Anggota</th>
+    <div class="footer-area-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                    <p>&copy; 2024 TA All Rights Reserved. &nbsp; Designed by<a target="_blank" href="#"> Tugas Akhir 2024</a></p>
+                </div>
 
-
-
-                    </tr>
-                </thead>
-                <tbody>
-
-
-
-                </tbody>
-            </table>
+            </div>
         </div>
     </div>
+</footer>
 </div>
-<!-- Registration Page Area End Here -->
+<script src="<?= base_url() ?>themes/js/jquery-2.2.4.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/plugins.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/wow.min.js"></script>
+<script src="<?= base_url() ?>themes/vendor/slider/js/jquery.nivo.slider.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/vendor/slider/home.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/vendor/OwlCarousel/owl.carousel.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/jquery.meanmenu.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/jquery.scrollUp.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/jquery.counterup.min.js"></script>
+<script src="<?= base_url() ?>themes/js/waypoints.min.js"></script>
+<script src="<?= base_url() ?>themes/js/jquery.countdown.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/isotope.pkgd.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/jquery.magnific-popup.min.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/jquery.gridrotator.js" type="text/javascript"></script>
+<script src="<?= base_url() ?>themes/js/main.js" type="text/javascript"></script>
+<script src="<?php echo base_url() . 'tables/js/jquery.dataTables.min.js' ?>"></script>
+<script src="<?php echo base_url() . 'tables/js/dataTables.bootstrap4.min.js' ?>"></script>
+<script>
+    $(document).ready(function() {
+        $('#display').DataTable();
+    });
+</script>
+
+</body>
+
+</html>
