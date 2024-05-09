@@ -1,44 +1,134 @@
-function register()
-	{
-		$id = $this->input->post('xid', true);
-		$nama = strip_tags(htmlspecialchars($this->input->post('xnama', true), ENT_QUOTES));
-		$jk = $this->input->post('xjk', true);
-		$nohp = $this->input->post('xnohp', true);
-		$email = $this->input->post('xemail', true);
-		$pts = $this->input->post('xpts', true);
-		$prodi = $this->input->post('xprodi', true);
-		$tgl = date('Y-m-d H:i:s');
-		$password_user = 'aptikom';
-		$pass_md5 = md5($password_user);
-		$tgl = $this->input->post('xtgl');
-		$config['upload_path'] = './assets/dokumen/';
-		$config['allowed_types'] = 'pdf';
-		$config['max_size'] = '2048';
-		$config['encrypt_name'] = false;
-		$config['file_name'] = 'IDcar-' . $id;
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
-		$this->upload->initialize($config);
-		if (!empty($_FILES['filedokumen']['name'])) {
-			if ($this->upload->do_upload('filedokumen')) {
-				$img_about = $this->upload->data();
-				$file = $img_about['file_name'];
-			}
-			$data = [
-				"id_anggota" => $id,
-				"nama_anggota" => $nama,
-				"jns_k" => $jk,
-				"nohp" => $nohp,
-				"email" => $email,
-				"pts" => $pts,
-				"prodi" => $prodi,
-				"pass" => $pass_md5,
-				"file_anggota" => $file,
-				"create_at" => $tgl,
-			];
-			echo $this->session->set_flashdata('message', 'success');
-			$this->M_data->insert_data($data, 'anggota');
-			redirect('login.js');
-		}
-		echo $this->session->set_flashdata('message', 'error');
-		redirect('daftar-anggota.js');
-	}
+class Slider extends MX_Controller
+{
+
+
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->library('form_validation');
+        $this->load->model('M_data');
+        $this->load->library('upload');
+    }
+
+
+    function index()
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'v_slider',
+            'data' => $this->db->query("select*from slider"),
+        );
+        $this->load->view('layout/wrapper', $data);
+    }
+
+    function save()
+    {
+        $id = $this->input->post('xkode');
+        $title = $this->input->post('xjudul');
+        $isi = $this->input->post('xisi');
+        $status = $this->input->post('xstatus');
+        $foto_lama = $this->input->post('foto');
+        $date = date('dmyhis');
+        $tgl = date('Y-m-d H:i:s');
+        $config['upload_path'] = './assets/images/';
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['encrypt_name'] = false;
+        $config['file_name'] = $date . $id;
+
+        $this->upload->initialize($config);
+        //var_dump($this->upload->do_upload('filefoto'));exit();
+        if (!empty($_FILES['filefoto']['name'])) {
+            unlink('./assets/images/' . $foto_lama);
+            if ($this->upload->do_upload('filefoto')) {
+                $img_about = $this->upload->data();
+                $image = $img_about['file_name'];
+            }
+            $data = array(
+                "judul" => $title,
+                "isi" => $isi,
+                "images" => $image,
+                "status_images" => $status,
+                "tgl_create" => $tgl,
+
+            );
+            echo $this->session->set_flashdata('message', 'success');
+            $this->M_data->insert_data($data, 'slider');
+            redirect('images-slider-admin.js');
+        }
+    }
+    function update()
+    {
+        $id = $this->input->post('xkode');
+        $title = $this->input->post('xjudul');
+        $isi = $this->input->post('xisi');
+        $status = $this->input->post('xstatus');
+        $foto_lama = $this->input->post('foto');
+        $date = date('dmyhis');
+        $tgl = date('Y-m-d H:i:s');
+        $config['upload_path'] = './assets/images/';
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['encrypt_name'] = false;
+        $config['file_name'] = $date . $id;
+
+        $this->upload->initialize($config);
+        //var_dump($this->upload->do_upload('filefoto'));exit();
+        if (!empty($_FILES['filefoto']['name'])) {
+            unlink('./assets/images/' . $foto_lama);
+            if ($this->upload->do_upload('filefoto')) {
+                $img_about = $this->upload->data();
+                $image = $img_about['file_name'];
+            }
+            $where = array('id' => $id);
+            $data = array(
+                "judul" => $title,
+                "isi" => $isi,
+                "images" => $image,
+                "status_images" => $status,
+                "tgl_create" => $tgl,
+
+            );
+            echo $this->session->set_flashdata('message', 'success');
+            $this->M_data->update_data($where, $data, 'slider');
+            redirect('images-slider-admin.js');
+        } else {
+            $where = array('id' => $id);
+            $data = array(
+                "judul" => $title,
+                "isi" => $isi,
+                "status_images" => $status,
+                "tgl_create" => $tgl,
+
+            );
+            echo $this->session->set_flashdata('message', 'success');
+            $this->M_data->update_data($where, $data, 'slider');
+            redirect('images-slider-admin.js');
+        }
+    }
+
+    function update_status()
+    {
+        $kode = $this->input->post('xkode');
+        $status = $this->input->post('xstatus');
+        $where = array('id' => $kode);
+        $data = array(
+            'status_images' => $status
+        );
+        echo $this->session->set_flashdata('message', 'info');
+        $this->M_data->update_data($where, $data, 'slider');
+        redirect('images-slider-admin.js');
+    }
+
+    function hapus()
+    {
+        $kode = $this->input->post('xkode');
+        $data = $this->input->post('file');
+        $path = './assets/images/' . $data;
+        unlink($path);
+        $this->db->query(" DELETE FROM slider where id='$kode' ");
+        echo $this->session->set_flashdata('message', 'warning');
+        redirect('images-slider-admin.js');
+    }
+}
