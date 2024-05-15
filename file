@@ -1,135 +1,92 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Tambah Data Artikel</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Data Artikel</a></li>
+                        <li class="breadcrumb-item active">Add Artikel</li>
+                    </ol>
 
-class Votting extends MX_Controller
-{
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Tambah Artikel Baru</h4>
+                        <form action="<?= base_url() ?>user/artikel/save_artikel" method="post" enctype="multipart/form-data">
+                            <div class="form-group m-t-40 row">
+                                <label for="example-text-input" class="col-2 col-form-label">Judul</label>
+                                <div class="col-10">
+                                    <input class="form-control title" type="text" name="xjudul" placeholder="masukan nama judul" required>
+                                    <br>
+                                    <br>
+                                    <input type="text" name="slug" class="form-control slug" placeholder="Permalink" style="background-color: #F8F8F8;outline-color: none;border:0;color:blue;" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="example-search-input" class="col-2 col-form-label">Kategori Artikel</label>
+                                <div class="col-10">
+                                    <select class="form-control" name="xkategori" required>
+
+                                        <?php
+
+                                        $ambilrole = $this->db->query('select*from tbl_kategori');
+
+                                        foreach ($ambilrole->result() as $row) :
+                                        ?>
+                                            <option value="<?= $row->id_kategori ?>"><?= $row->nama_kategori ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="example-email-input" class="col-2 col-form-label">Tanggal Posting</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="date" name="xtanggal" required>
+                                </div>
+                            </div>
 
 
-    function __construct()
-    {
-        parent::__construct();
-        $this->load->library('form_validation');
-        $this->load->model('M_data');
-        $this->load->library('upload');
-    }
+
+                            <div class="form-group row">
+                                <label for="example-search-input" class="col-2 col-form-label">Status Artikel</label>
+                                <div class="col-10">
+                                    <select class="form-control" name="xstatus" required>
+                                        <option value="1">Publish</option>
+                                        <option value="2">Unpublish</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="example-search-input" class="col-2 col-form-label">Images Artikel</label>
+                                <div class="col-10">
+                                    <input class="form-control" type="file" name="filefoto" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="example-search-input" class="col-2 col-form-label">Isi Artikel</label>
+                                <div class="col-10">
+                                    <textarea id="mymce" name="xisi" rows="8"></textarea>
+                                </div>
+                            </div>
 
 
-    function index()
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'v_calonketua',
-            'data' => $this->db->query("select*from calon_ketua"),
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Simpan</button>
+                                <a href="<?= base_url() ?>/artikel-admin.js" button type="button" class="btn btn-danger">Batal </button></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
+    </div>
 
-    function hasil_votting()
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'v_hasil_votting',
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
-
-    function save()
-    {
-        $nomor = $this->input->post('xnomor');
-        $nama = $this->input->post('xnama');
-        $visi = $this->input->post('xvisi');
-        $misi = $this->input->post('xmisi');
-        $foto_lama = $this->input->post('foto');
-        $date = date('dmyhis');
-        $tgl = date('Y-m-d H:i:s');
-        $config['upload_path'] = './assets/images/';
-        $config['allowed_types'] = 'jpg|png|jpeg';
-        $config['encrypt_name'] = false;
-        $config['file_name'] = $date . $nomor;
-
-        $this->upload->initialize($config);
-        //var_dump($this->upload->do_upload('filefoto'));exit();
-        if (!empty($_FILES['filefoto']['name'])) {
-            unlink('./assets/images/' . $foto_lama);
-            if ($this->upload->do_upload('filefoto')) {
-                $img_about = $this->upload->data();
-                $image = $img_about['file_name'];
-            }
-            $data = array(
-                "no_urut" => $nomor,
-                "nama" => $nama,
-                "visi" => $visi,
-                "misi" => $misi,
-                "images" => $image,
-                "tgl_create" => $tgl,
-
-            );
-            echo $this->session->set_flashdata('message', 'success');
-            $this->M_data->insert_data($data, 'calon_ketua');
-            redirect('calon-ketua-admin.js');
-        }
-    }
-    function update()
-    {
-        $id = $this->input->post('xkode');
-        $nomor = $this->input->post('xnomor');
-        $nama = $this->input->post('xnama');
-        $visi = $this->input->post('xvisi');
-        $misi = $this->input->post('xmisi');
-        $foto_lama = $this->input->post('foto');
-        $date = date('dmyhis');
-        $tgl = date('Y-m-d H:i:s');
-        $config['upload_path'] = './assets/images/';
-        $config['allowed_types'] = 'jpg|png|jpeg';
-        $config['encrypt_name'] = false;
-        $config['file_name'] = $date . $id;
-
-        $this->upload->initialize($config);
-        //var_dump($this->upload->do_upload('filefoto'));exit();
-        if (!empty($_FILES['filefoto']['name'])) {
-            unlink('./assets/images/' . $foto_lama);
-            if ($this->upload->do_upload('filefoto')) {
-                $img_about = $this->upload->data();
-                $image = $img_about['file_name'];
-            }
-            $where = array('id' => $id);
-            $data = array(
-                "no_urut" => $nomor,
-                "nama" => $nama,
-                "visi" => $visi,
-                "misi" => $misi,
-                "images" => $image,
-                "tgl_create" => $tgl,
-
-            );
-            echo $this->session->set_flashdata('message', 'success');
-            $this->M_data->update_data($where, $data, 'calon_ketua');
-            redirect('calon-ketua-admin.js');
-        } else {
-            $where = array('id' => $id);
-            $data = array(
-                "no_urut" => $nomor,
-                "nama" => $nama,
-                "visi" => $visi,
-                "misi" => $misi,
-                // "images" => $image,
-                "tgl_create" => $tgl,
-
-            );
-            echo $this->session->set_flashdata('message', 'success');
-            $this->M_data->update_data($where, $data, 'calon_ketua');
-            redirect('calon-ketua-admin.js');
-        }
-    }
-    function hapus()
-    {
-        $kode = $this->input->post('xkode');
-        $data = $this->input->post('file');
-        $path = './assets/images/' . $data;
-        unlink($path);
-        $this->db->query(" DELETE FROM calon_ketua where id='$kode' ");
-        echo $this->session->set_flashdata('message', 'warning');
-        redirect('calon-ketua-admin.js');
-    }
-}
+</div>
