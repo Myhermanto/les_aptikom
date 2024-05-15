@@ -1,227 +1,376 @@
+<div class="page-wrapper">
+
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Calon Ketua Aptikom</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Data E-Votting</a></li>
+                        <li class="breadcrumb-item active">Calon Ketua</li>
+                    </ol>
+                    &nbsp;
+                    <a href="#" data-toggle="modal" data-backdrop="false" data-target="#addinfo" class="btn btn-info btn-min-width box-shadow-3 mr-1 mb-1" data-backdrop="false" button type="button"><i class="fa fa-plus"><b> Tambah Data</b></i></button>
+                    </a>&nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"> Data Calon Ketua Aptikom</h4>
+                        <h6 class="card-subtitle">Export data to Copy, CSV, Excel, PDF & Print</h6>
+                        <div class="table-responsive m-t-40">
+                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nomor Urut</th>
+                                        <th>Images</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Visi</th>
+                                        <th>Misi</th>
+                                        <th>Create at</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nomor Urut</th>
+                                        <th>Images</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Visi</th>
+                                        <th>Misi</th>
+                                        <th>Create at</th>
+
+                                        <th>Aksi</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <?php
+                                    $no = 0;
+                                    foreach ($data->result() as $row) :
+                                        $no++;
+                                    ?>
+                                        <tr>
+                                            <td><?= $no ?></td>
+                                            <td><?= $row->no_urut ?></td>
+
+                                            <td class="text-center" style="width:100px;">
+
+
+
+                                                <img class="img-responsive" src="<?php echo base_url() . './assets/images/' . $row->images ?>" alt="team">
+
+
+
+
+                                            </td>
+                                            <td><?= $row->nama ?></td>
+                                            <td>
+                                                <button type="button" class=" btn btn-info" data-toggle="modal" data-target=".bs-example-modal-lg-visi<?php echo $row->id; ?>">
+                                                    <i class="fa  fa-info"> [Visi]</i></button>
+
+
+
+                                            </td>
+                                            <td>
+                                                <button type="button" class=" btn btn-info" data-toggle="modal" data-target=".bs-example-modal-lg-misi<?php echo $row->id; ?>">
+                                                    <i class="fa  fa-info"> [Misi]</i></button>
+
+
+
+                                            </td>
+
+                                            <td><?= $row->tgl_create ?></td>
+
+                                            <td style="text-align:center;"><a href="#" class="btn btn-outline-success" data-toggle="modal" data-target="#edit<?php echo $row->id; ?>">
+                                                    <i class="fa  fa-pencil "></i> Edit
+                                                </a> | <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete<?php echo $row->id; ?>"> <i class="fa  fa-trash "></i> Hapus</button></td>
+
+
+                                        </tr>
+                                </tbody>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <!-- sample modal content -->
+                                            <div class="modal fade bs-example-modal-lg-visi<?php echo $row->id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="myLargeModalLabel"><i class="fa fa-info"></i> Visi Calon Ketua</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        </div>
+
+                                                        <form action="#" method="post" enctype="multipart/form-data">
+
+
+                                                            <div class="modal-body">
+
+                                                                <label class="col-md-12" for="example-text" align="left">Visi Calon Ketua: </label>
+
+                                                                <textarea name="xalasan" rows="8" class="col-md-12" class="form-control" placeholder="Alasan Pengajuan"><?php echo $row->visi; ?></textarea>
+
+                                                            </div>
+
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <!-- /.modal -->
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <!-- sample modal content -->
+                                            <div class="modal fade bs-example-modal-lg-misi<?php echo $row->id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="myLargeModalLabel"><i class="fa fa-info"></i> Visi Calon Ketua</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        </div>
+
+                                                        <form action="#" method="post" enctype="multipart/form-data">
+
+
+                                                            <div class="modal-body">
+
+                                                                <label class="col-md-12" for="example-text" align="left">Visi Calon Ketua: </label>
+
+                                                                <textarea name="xalasan" rows="8" class="col-md-12" class="form-control" placeholder="misi"><?php echo $row->misi; ?></textarea>
+
+                                                            </div>
+
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <!-- /.modal -->
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            <?php endforeach; ?>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+<div class="col-lg-4 col-md-6 col-sm-12">
+    <div class="form-group">
+
+        <div class="modal fade text-left" id="addinfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-success white">
+                        <h4 class="modal-title white" id="myModalLabel11">Tambah Data </h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <form action="<?php echo base_url() . 'user/Votting/save' ?>" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="col-md-12 m-b-20">
+
+
+                                <div class="form-group">
+                                    <label for="accountTextarea">Nomor Urut</label>
+                                    <input type="text" id="projectinput1" class="form-control" placeholder="Masukan Nomor Urut Calon Ketua" name="xnomor" required>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="accountTextarea">Nama Calon Ketua Aptikom</label>
+                                    <input type="text" id="projectinput1" class="form-control" placeholder="Masukan Nama Calon Ketua" name="xnama" required>
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="accountTextarea">Visi</label>
+
+                                    <textarea name="xvisi" rows="8" class="col-md-12" class="form-control" placeholder="Masukan Visi Calon Ketua"></textarea>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="accountTextarea">Misi</label>
+
+                                    <textarea name="xmisi" rows="8" class="col-md-12" class="form-control" placeholder="Masukan Misi Calon Ketua"></textarea>
+
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="accountTextarea">Flayer Calon Ketua</label>
+                                    <input type="file" name="filefoto" class="form-control">
+
+                                </div>
+
+
+
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-outline-info">Simpan</button>
+                            <button type="button" class="btn grey btn-outline-danger" data-dismiss="modal">Batal</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
 
-class Home extends MX_Controller
-{
-	function __construct()
-	{
-		parent::__construct();
-		$this->load->model('M_data');
-		$this->load->library('upload');
-	}
-	public function index()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'index',
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
+foreach ($data->result() as $row) :
 
+?>
 
-	public function sejarah()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_sejarah',
-			'data' => $this->db->query("select*from sejarah_aptikom")->row(),
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="form-group">
 
-	public function visimisi()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_visimisi',
-			'data' => $this->db->query("select*from visimisi_aptikom")->row(),
+            <div class="modal fade text-left" id="edit<?= $row->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info white">
+                            <h4 class="modal-title white" id="myModalLabel11">Edit Data </h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
-
-	public function tugasfungsi()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_tugasfungsi',
-			'data' => $this->db->query("select*from tujuanft_aptikom")->row(),
-
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
-
-	public function Struktur()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_struktur',
-			'data' => $this->db->query("select*from struktur_aptikom")->row(),
-
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
-
-	public function keanggotaan()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_keanggotaan',
-			'data' => $this->db->query("select*from anggota"),
-
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
-	public function Data_prodi()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_data_prodi',
-			'data' => $this->db->query("select*from prodi"),
-			'aktif' => $this->db->query("select count(id_prodi) as jumlah from prodi where status_prodi='1'")->row(),
-			'nonaktif' => $this->db->query("select count(id_prodi) as jumlah from prodi where status_prodi='2'")->row(),
-
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
-	public function Data_grafik()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_data_grafik',
-			'data' => $this->db->query("select*from prodi"),
-
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
+                        <form action="<?php echo base_url() . 'user/Votting/update' ?>" method="post" enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <div class="col-md-12 m-b-20">
 
 
-	public function evotting()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_evotting',
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
-	public function daftar_anggota()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_daftar_anggota',
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
 
-	public function login()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_login',
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
+                                    <div class="form-group">
+                                        <input type="hidden" name="xkode" value="<?php echo $row->id; ?>">
 
-	public function kontak()
-	{
-		$data = array(
-			'title' => 'Sistem Informasi Aptikom',
-			'conten' => 'v_kontak',
-		);
-		$this->load->view('layout/wrapper', $data);
-	}
+                                        <label for="accountTextarea">Nomor Urut</label>
+                                        <input type="text" id="projectinput1" class="form-control" placeholder="Masukan Nomor Urut Calon Ketua" value="<?php echo $row->no_urut; ?>" name="xnomor" required>
 
-	function register_anggota()
-	{
-		$id = $this->input->post('xid', true);
-		$nama = strip_tags(htmlspecialchars($this->input->post('xnama', true), ENT_QUOTES));
-		$nohp = $this->input->post('xnohp', true);
-		$email = $this->input->post('xemail', true);
-		$tgl = date('Y-m-d H:i:s');
-		$password_user = 'aptikom';
-		$pass_md5 = md5($password_user);
-		$pass_64 = base64_encode($password_user);
-		$config['upload_path'] = './assets/dokumen/';
-		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
-		$config['max_size'] = '1048';
-		$config['encrypt_name'] = false;
-		$config['file_name'] = 'IDcar-' . $id;
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="accountTextarea">Nama Calon Ketua Aptikom</label>
+                                        <input type="text" id="projectinput1" class="form-control" placeholder="Masukan Nama Calon Ketua" value="<?php echo $row->nama; ?>" name="xnama" required>
 
-		$this->upload->initialize($config);
-		if (!empty($_FILES['filedokumen']['name'])) {
-			if ($this->upload->do_upload('filedokumen')) {
-				$img_about = $this->upload->data();
-				$file = $img_about['file_name'];
-			}
-			$data = [
-				"id_anggota" => $id,
-				"nama_anggota" => $nama,
-				"nohp" => $nohp,
-				"email" => $email,
-				"verifikasi" => '2',
-				"status_anggota" => '2',
-				"pass" => $pass_md5,
-				"pass_64" => $pass_64,
-				"file_anggota" => $file,
-				"create_at" => $tgl,
-			];
-			// var_dump($data);
-			// die;
-			echo $this->session->set_flashdata('message', 'success');
-			$this->M_data->insert_data($data, 'anggota');
-			redirect('login.js');
-		}
-		echo $this->session->set_flashdata('message', 'error');
-		redirect('daftar-anggota.js');
-	}
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="accountTextarea">Visi</label>
 
-	function register_anggotaProdi()
-	{
-		$id = $this->input->post('xid', true);
-		$nama = strip_tags(htmlspecialchars($this->input->post('xnama', true), ENT_QUOTES));
-		$nohp = $this->input->post('xnohp', true);
-		$email = $this->input->post('xemail', true);
-		$pts = $this->input->post('xpts', true);
-		$prodi = $this->input->post('xprodi', true);
-		$tgl = date('Y-m-d H:i:s');
-		$password_user = 'aptikom';
-		$pass_md5 = md5($password_user);
-		$pass_64 = base64_encode($password_user);
+                                        <textarea name="xvisi" rows="8" class="col-md-12" class="form-control" placeholder="Masukan Visi Calon Ketua"><?php echo $row->visi; ?></textarea>
 
 
-		$config['upload_path'] = './assets/dokumen/';
-		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
-		$config['max_size'] = '2048';
-		$config['encrypt_name'] = false;
-		$config['file_name'] = 'IDcar-' . $id;
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="accountTextarea">Misi</label>
 
-		$this->upload->initialize($config);
-		if (!empty($_FILES['filedokumen']['name'])) {
-			if ($this->upload->do_upload('filedokumen')) {
-				$img_about = $this->upload->data();
-				$file = $img_about['file_name'];
-			}
-			$data = [
-				"id_anggota" => $id,
-				"nama_anggota" => $nama,
-				"nohp" => $nohp,
-				"email" => $email,
-				"pts" => $pts,
-				"prodi" => $prodi,
-				"verifikasi" => '2',
-				"status_anggota" => '2',
-				"pass" => $pass_md5,
-				"pass_64" => $pass_64,
-				"file_anggota" => $file,
-				"create_at" => $tgl,
-			];
-			// var_dump($data);
-			// die;
-			echo $this->session->set_flashdata('message', 'success');
-			$this->M_data->insert_data($data, 'anggota_prodi');
-			redirect('login.js');
-		}
-		echo $this->session->set_flashdata('message', 'error');
-		redirect('daftar-anggota.js');
-	}
-}
+                                        <textarea name="xmisi" rows="8" class="col-md-12" class="form-control" placeholder="Masukan Misi Calon Ketua"><?php echo $row->misi; ?></textarea>
+
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="accountTextarea">File</label>
+                                        <?php if (file_exists("assets/images/" . $row->images)) { ?>
+                                            <img src="<?php echo base_url() . 'assets/images/' . $row->images; ?>" alt="" lass="dropify" width="200" height="200">
+                                        <?php
+                                        } else {
+                                        ?>
+                                            <input type="hidden" id="special" name="foto" class="form-control" placeholder="Foto" value="<?php echo $row->images; ?>">
+                                        <?php
+                                        } ?>
+                                        <input type="file" id="input-file-now" name="filefoto" accept="application/jpg" />
+                                        <small class="form-text text-muted"></small>
+
+                                    </div>
+
+
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-info">Simpan</button>
+                                <button type="button" class="btn grey btn-outline-danger" data-dismiss="modal">Batal</button>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="form-group">
+
+            <div class="modal fade text-left" id="delete<?= $row->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning">
+                            <h4 class="modal-title white" id="myModalLabel11">Hapus Data</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form action="<?php echo base_url() . 'user/Votting/hapus' ?>" method="post">
+                            <div class="modal-body">
+                                <div class="col-md-12 m-b-20">
+
+
+                                    <div class="form-group">
+
+                                        <input type="hidden" name="xkode" value="<?php echo $row->id; ?>" />
+                                        <input type="hidden" name="file" value="<?php echo $row->images; ?>" />
+                                        <p>Apakah Anda yakin mau menghapus Data <b><?php echo $row->nama; ?>
+                                            </b> ini ?</p>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-danger">Hapus</button>
+
+                                <button type="button" class="btn grey btn-outline-info" data-dismiss="modal">Batal</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<?php endforeach; ?>
