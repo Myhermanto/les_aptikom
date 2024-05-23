@@ -1,10 +1,10 @@
 <div class="inner-page-banner-area" style="background-image: url('img/banner/5.jpg');">
     <div class="container">
         <div class="pagination-area">
-            <h1>Data Grafik Program Studi</h1>
+            <h1>Data Grafik Anggota</h1>
             <ul>
-                <li><a href="#">Program Studi</a> -</li>
-                <li>Data Prodi</li>
+                <li><a href="#">Grafik</a> -</li>
+                <li>Data Grafik Anggota</li>
             </ul>
         </div>
     </div>
@@ -15,10 +15,27 @@
 <div class="about-page1-area">
     <div class="container">
         <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <label for="accountTextarea">Status Prodi</label>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <label for="accountTextarea">Status Anggota Individu</label>
 
                 <canvas id="myChart" width="400" height="200"></canvas>
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <label for="accountTextarea">Status Anggota Prodi</label>
+
+                <canvas id="myChartprodi" width="400" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label for="accountTextarea">Grafik E-Votting</label>
+
+                <canvas id="myChartvotting" width="400" height="200"></canvas>
 
             </div>
 
@@ -35,10 +52,10 @@
             datasets: [{
                 label: '',
                 data: [<?=
-                        $aktif->jumlah;
+                        $aktifanggota->jumlah;
                         ?>,
                     <?=
-                    $nonaktif->jumlah;
+                    $nonaktifanggota->jumlah;
                     ?>,
                 ],
                 backgroundColor: [
@@ -69,14 +86,51 @@
     var myChart = new Chart(ctx, {
         type: 'pie',
         data: {
-            labels: ["Ilmu Komputer", "Sistem Informasi"],
+            labels: ["Aktif", "Tidak Aktif"],
             datasets: [{
                 label: '',
                 data: [<?=
-                        $aktif->jumlah;
+                        $aktifprodi->jumlah;
                         ?>,
                     <?=
-                    $nonaktif->jumlah;
+                    $nonaktifprodi->jumlah;
+                    ?>,
+                ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+<script>
+    var ctx = document.getElementById("myChartvotting").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Calon A", "Calon B"],
+            datasets: [{
+                label: ' Grafik Hasil E-Votting',
+                data: [<?=
+                        $CalonA->jumlah;
+                        ?>,
+                    <?=
+                    $CalonB->jumlah;
                     ?>,
                 ],
                 backgroundColor: [
