@@ -1,157 +1,38 @@
-<div class="inner-page-banner-area" style="background-image: url('img/banner/5.jpg');">
-    <div class="container">
-        <div class="pagination-area">
-            <h1>Data Grafik Anggota</h1>
-            <ul>
-                <li><a href="#">Grafik</a> -</li>
-                <li>Data Grafik Anggota</li>
-            </ul>
-        </div>
-    </div>
-</div>
+<!doctype html>
+<html class="no-js" lang="">
 
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title><?= $title ?></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="<?= base_url() ?>themes/img/favicon.png">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/normalize.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/main.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/bootstrap.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/animate.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/vendor/OwlCarousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/vendor/OwlCarousel/owl.theme.default.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/meanmenu.min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/vendor/slider/css/nivo-slider.css" type="text/css" />
+    <link rel="stylesheet" href="<?= base_url() ?>themes/vendor/slider/css/preview.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/jquery.datetimepicker.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/magnific-popup.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/hover-min.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/css/reImageGrid.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/style.css">
+    <link rel="stylesheet" href="<?= base_url() ?>themes/chartjs/Chart.js">
 
+    <script src="<?= base_url() ?>themes/js/modernizr-2.8.3.min.js"></script>
+    <link href="<?php echo base_url() . 'tables/css/dataTables.bootstrap4.min.css' ?>" rel="stylesheet">
+    <link href="<?php echo base_url() . 'assets/alertjs/sweetalert2.css' ?>" rel="stylesheet">
+   
+   
 
-<div class="about-page1-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <label for="accountTextarea">Status Anggota Individu</label>
+</head>
 
-                <canvas id="myChart" width="400" height="200"></canvas>
+<body>
 
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                <label for="accountTextarea">Status Anggota Prodi</label>
-
-                <canvas id="myChartprodi" width="400" height="200"></canvas>
-            </div>
-        </div>
-    </div>
-    <br>
-    <br>
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <label for="accountTextarea">Grafik E-Votting</label>
-
-                <canvas id="myChartvotting" width="400" height="200"></canvas>
-
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<script>
-    var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ["Aktif", "Tidak Aktif"],
-            datasets: [{
-                label: '',
-                data: [<?=
-                        $aktifanggota->jumlah;
-                        ?>,
-                    <?=
-                    $nonaktifanggota->jumlah;
-                    ?>,
-                ],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-</script>
-
-<script>
-    var ctx = document.getElementById("myChartprodi").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ["Aktif", "Tidak Aktif"],
-            datasets: [{
-                label: '',
-                data: [<?=
-                        $aktifprodi->jumlah;
-                        ?>,
-                    <?=
-                    $nonaktifprodi->jumlah;
-                    ?>,
-                ],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-</script>
-<script>
-    var ctx = document.getElementById("myChartvotting").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ["Calon A", "Calon B"],
-            datasets: [{
-                label: ' Grafik Hasil E-Votting',
-                data: [<?=
-                        $CalonA->jumlah;
-                        ?>,
-                    <?=
-                    $CalonB->jumlah;
-                    ?>,
-                ],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true
-                    }
-                }]
-            }
-        }
-    });
-</script>
+    <div id="wrapper">
