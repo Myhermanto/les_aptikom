@@ -1,147 +1,245 @@
-<div class="slider1-area overlay-default">
-    <div class="bend niceties preview-1">
-        <div id="ensign-nivoslider-3" class="slides">
-            <?php
-            foreach ($slider->result() as $row) :
-            ?>
-                <img src="<?php echo base_url() . './assets/images/' . $row->images ?>" alt="slider" title="#slider-direction-1" />
-            <?php endforeach; ?>
-        </div>
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class Home extends MX_Controller
+{
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->model('M_data');
+		$this->load->library('upload');
+	}
+	public function index()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'index',
+			'slider' => $this->db->query("select*from slider where status_images='1'"),
+			'artikel' => $this->db->query("SELECT a.*, b.nama_kategori,c.nama_user
+			FROM artikel AS a
+			LEFT JOIN tbl_kategori AS b ON a.id_kategori=b.id_kategori 
+			LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order by a.id_artikel desc limit 3 "),
+
+			'konferensi' => $this->db->query("SELECT a.*, b.nama_konfrens,c.nama_user
+            FROM konferensi AS a
+            LEFT JOIN kategori_konfrens AS b ON a.id_kategori=b.id_konfrens 
+            LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order by a.id_artikel desc limit 3 "),
+
+			'latepost_artikel' => $this->db->query("SELECT a.*, b.nama_kategori,c.nama_user
+FROM artikel AS a
+LEFT JOIN tbl_kategori AS b ON a.id_kategori=b.id_kategori 
+LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order by a.id_artikel asc limit 3 "),
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
 
-    </div>
-</div>
-<br>
-<br>
-<br>
-<div class="container">
-    <h2 class="title-default-center">Berita Terbaru</h2>
-    <div class="row">
+	public function sejarah()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_sejarah',
+			'data' => $this->db->query("select*from sejarah_aptikom")->row(),
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
-        <div class="col-lg-12 col-md-12 col-sm-8 col-xs-12">
-            <div class="row">
+	public function visimisi()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_visimisi',
+			'data' => $this->db->query("select*from visimisi_aptikom")->row(),
 
-                <?php
-                foreach ($artikel->result() as $row) :
-                ?>
-                    <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
-                        <div class="news-box">
-                            <div class="news-img-holder">
-                                <img src="<?php echo base_url() . './assets/images/' . $row->gambar ?>" class="img-responsive" alt="research">
+	public function tugasfungsi()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_tugasfungsi',
+			'data' => $this->db->query("select*from tujuanft_aptikom")->row(),
 
-                            </div>
-                            <h3 class="title-news-left-bold"><a href="#"><?= $row->judul ?></a></h3>
-                            <ul class="title-bar-high news-comments">
-                                <li><a href="#"><i class="fa fa-calendar" aria-hidden="true"></i> <?php echo date('d M Y', strtotime($row->post_date)); ?>
-                                    </a></li>
-                                <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i><span>By</span> <?= $row->nama_user ?></a></li>
-                                <li><a href="#"><i class="fa fa-tags" aria-hidden="true"></i><?= $row->nama_kategori ?></a></li>
-                                <li><a href="#"><i class="fa fa-eye" aria-hidden="true"></i><span><?= $row->lihat ?></span> </a></li>
-                            </ul>
-                            <?php echo strip_tags(substr($row->isi_artikel, 0, 100)) . '...'; ?>
-                        </div>
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
-                    </div>
-                <?php endforeach; ?>
+	public function Struktur()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_struktur',
+			'data' => $this->db->query("select*from struktur_aptikom")->row(),
 
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
-            </div>
-        </div>
-        <center> <a href="#" class="view-all-primary-btn">View All</a>
-        </center>
-    </div>
-</div>
+	public function keanggotaan()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_keanggotaan',
+			'data' => $this->db->query("select*from anggota"),
 
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+	public function Data_prodi()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_data_prodi',
+			'data' => $this->db->query("select*from prodi"),
+			'aktif' => $this->db->query("select count(id_prodi) as jumlah from prodi where status_prodi='1'")->row(),
+			'nonaktif' => $this->db->query("select count(id_prodi) as jumlah from prodi where status_prodi='2'")->row(),
 
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+	public function Data_grafik()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_data_grafik',
+			'data' => $this->db->query("select*from prodi"),
+			'aktif' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='1'")->row(),
+			'nonaktif' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='2'")->row(),
 
-
-<div class="news-event-area">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 news-inner-area">
-                <h2 class="title-default-left">Latest Artikel</h2>
-                <ul class="news-wrapper">
-
-                    <?php
-                    foreach ($artikel->result() as $row) :
-                    ?>
-                        <li>
-                            <div class="news-img-holder">
-                                <a href="#"><img src="<?php echo base_url() . './assets/images/' . $row->gambar ?>" class="img-responsive" alt="news"></a>
-                            </div>
-                            <div class="news-content-holder">
-                                <h3><a href="single-news.html"><?= $row->judul ?></a></h3>
-                                <div class="post-date"> <?php echo date('d M Y', strtotime($row->post_date)); ?></div>
-                                <?php echo strip_tags(substr($row->isi_artikel, 0, 100)) . '...'; ?>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
-
-                </ul>
-                <div class="news-btn-holder">
-                    <a href="#" class="view-all-accent-btn">View All</a>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 news-inner-area">
-                <h2 class="title-default-left">Konferensi Aptikel</h2>
-                <ul class="news-wrapper">
-
-                    <?php
-                    foreach ($konferensi->result() as $row) :
-                    ?>
-                        <li class="wow bounceInUp" data-wow-duration="2s" data-wow-delay=".1s">
-                            <div class="news-img-holder">
-                                <a href="#"><img src="<?php echo base_url() . './assets/images/' . $row->gambar ?>" class="img-responsive" alt="news"></a>
-                            </div>
-                            <div class="news-content-holder">
-                                <h3><a href="single-news.html"><?= $row->judul ?></a></h3>
-                                <div class="post-date"> <?php echo date('d M Y', strtotime($row->post_date)); ?></div>
-                                <?php echo strip_tags(substr($row->isi_artikel, 0, 100)) . '...'; ?>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
 
-                </ul>
-                <div class="news-btn-holder">
-                    <a href="#" class="view-all-accent-btn">View All</a>
-                </div>
-                <br>
-            </div>
-        </div>
-    </div>
-</div>
+	public function evotting()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_evotting',
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+	public function daftar_anggota()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_daftar_anggota',
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
-<div class="brand-area">
-    <div class="container">
-        <div class="rc-carousel" data-loop="true" data-items="4" data-margin="30" data-autoplay="true" data-autoplay-timeout="5000" data-smart-speed="2000" data-dots="false" data-nav="false" data-nav-speed="false" data-r-x-small="2" data-r-x-small-nav="false" data-r-x-small-dots="false" data-r-x-medium="3" data-r-x-medium-nav="false" data-r-x-medium-dots="false" data-r-small="4" data-r-small-nav="false" data-r-small-dots="false" data-r-medium="4" data-r-medium-nav="false" data-r-medium-dots="false" data-r-large="4" data-r-large-nav="false" data-r-large-dots="false">
-            <div class="brand-area-box">
-                <a href="#"><img src="<?= base_url() ?>themes/img/brand/1.jpg" alt="brand"></a>
-            </div>
-            <div class="brand-area-box">
-                <a href="#"><img src="<?= base_url() ?>themes/img/brand/2.jpg" alt="brand"></a>
-            </div>
-            <div class="brand-area-box">
-                <a href="#"><img src="<?= base_url() ?>themes/img/brand/3.jpg" alt="brand"></a>
-            </div>
-            <div class="brand-area-box">
-                <a href="#"><img src="<?= base_url() ?>themes/img/brand/4.jpg" alt="brand"></a>
-            </div>
-            <div class="brand-area-box">
-                <a href="#"><img src="<?= base_url() ?>themes/img/brand/1.jpg" alt="brand"></a>
-            </div>
-            <div class="brand-area-box">
-                <a href="#"><img src="<?= base_url() ?>themes/img/brand/2.jpg" alt="brand"></a>
-            </div>
-            <div class="brand-area-box">
-                <a href="#"><img src="<?= base_url() ?>themes/img/brand/3.jpg" alt="brand"></a>
-            </div>
-            <div class="brand-area-box">
-                <a href="#"><img src="<?= base_url() ?>themes/img/brand/4.jpg" alt="brand"></a>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Brand Area End Here -->
-<!-- Footer Area Start Here -->
+	public function login()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_login',
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	public function kontak()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_kontak',
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	function register_anggota()
+	{
+		$id = $this->input->post('xid', true);
+		$nama = strip_tags(htmlspecialchars($this->input->post('xnama', true), ENT_QUOTES));
+		$nohp = $this->input->post('xnohp', true);
+		$email = $this->input->post('xemail', true);
+		$tgl = date('Y-m-d H:i:s');
+		$password_user = 'aptikom';
+		$pass_md5 = md5($password_user);
+		$pass_64 = base64_encode($password_user);
+		$config['upload_path'] = './assets/dokumen/';
+		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
+		$config['max_size'] = '1048';
+		$config['encrypt_name'] = false;
+		$config['file_name'] = 'IDcar-' . $id;
+
+		$this->upload->initialize($config);
+		if (!empty($_FILES['filedokumen']['name'])) {
+			if ($this->upload->do_upload('filedokumen')) {
+				$img_about = $this->upload->data();
+				$file = $img_about['file_name'];
+			}
+			$data = [
+				"id_anggota" => $id,
+				"nama_anggota" => $nama,
+				"nohp" => $nohp,
+				"email" => $email,
+				"verifikasi" => '2',
+				"status_anggota" => '2',
+				"pass" => $pass_md5,
+				"pass_64" => $pass_64,
+				"file_anggota" => $file,
+				"create_at" => $tgl,
+			];
+			// var_dump($data);
+			// die;
+			echo $this->session->set_flashdata('message', 'success');
+			$this->M_data->insert_data($data, 'anggota');
+			redirect('login.js');
+		}
+		echo $this->session->set_flashdata('message', 'error');
+		redirect('daftar-anggota.js');
+	}
+
+	function register_anggotaProdi()
+	{
+		$id = $this->input->post('xid', true);
+		$nama = strip_tags(htmlspecialchars($this->input->post('xnama', true), ENT_QUOTES));
+		$nohp = $this->input->post('xnohp', true);
+		$email = $this->input->post('xemail', true);
+		$pts = $this->input->post('xpts', true);
+		$prodi = $this->input->post('xprodi', true);
+		$tgl = date('Y-m-d H:i:s');
+		$password_user = 'aptikom';
+		$pass_md5 = md5($password_user);
+		$pass_64 = base64_encode($password_user);
+
+
+		$config['upload_path'] = './assets/dokumen/';
+		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
+		$config['max_size'] = '2048';
+		$config['encrypt_name'] = false;
+		$config['file_name'] = 'IDcar-' . $id;
+
+		$this->upload->initialize($config);
+		if (!empty($_FILES['filedokumen']['name'])) {
+			if ($this->upload->do_upload('filedokumen')) {
+				$img_about = $this->upload->data();
+				$file = $img_about['file_name'];
+			}
+			$data = [
+				"id_anggota" => $id,
+				"nama_anggota" => $nama,
+				"nohp" => $nohp,
+				"email" => $email,
+				"pts" => $pts,
+				"prodi" => $prodi,
+				"verifikasi" => '2',
+				"status_anggota" => '2',
+				"pass" => $pass_md5,
+				"pass_64" => $pass_64,
+				"file_anggota" => $file,
+				"create_at" => $tgl,
+			];
+			// var_dump($data);
+			// die;
+			echo $this->session->set_flashdata('message', 'success');
+			$this->M_data->insert_data($data, 'anggota_prodi');
+			redirect('login.js');
+		}
+		echo $this->session->set_flashdata('message', 'error');
+		redirect('daftar-anggota.js');
+	}
+}
