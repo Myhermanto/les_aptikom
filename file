@@ -1,215 +1,307 @@
+<div class="page-wrapper">
+
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-5 align-self-center">
+                <h4 class="text-themecolor">Calon Ketua Aptikom</h4>
+            </div>
+            <div class="col-md-7 align-self-center text-right">
+                <div class="d-flex justify-content-end align-items-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Data E-Votting</a></li>
+                        <li class="breadcrumb-item active">Calon Ketua</li>
+                    </ol>
+                    &nbsp;
+                    <a href="<?= base_url() ?>tambah-calon-ketua-admin.js" class="btn btn-info btn-min-width box-shadow-3 mr-1 mb-1" data-backdrop="false" button type="button"><i class="fa fa-plus"><b> Tambah Data</b></i></button>
+                    </a>&nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title"> Data Calon Ketua Aptikom</h4>
+                        <h6 class="card-subtitle">Export data to Copy, CSV, Excel, PDF & Print</h6>
+                        <div class="table-responsive m-t-40">
+                            <table id="example23" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nomor Urut</th>
+                                        <th>Images</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Visi</th>
+                                        <th>Misi</th>
+                                        <th>Status</th>
+
+                                        <th>Create at</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Nomor Urut</th>
+                                        <th>Images</th>
+                                        <th>Nama Lengkap</th>
+                                        <th>Visi</th>
+                                        <th>Misi</th>
+                                        <th>Status</th>
+                                        <th>Create at</th>
+
+                                        <th>Aksi</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    <?php
+                                    $no = 0;
+                                    foreach ($data->result() as $row) :
+                                        $no++;
+                                    ?>
+                                        <tr>
+                                            <td><?= $no ?></td>
+                                            <td><?= $row->no_urut ?></td>
+
+                                            <td class="text-center" style="width:100px;">
+
+
+
+                                                <img class="img-responsive" src="<?php echo base_url() . './assets/images/' . $row->images ?>" alt="team">
+
+
+
+
+                                            </td>
+                                            <td><?= $row->nama ?></td>
+                                            <td>
+                                                <button type="button" class=" btn btn-info" data-toggle="modal" data-target=".bs-example-modal-lg-visi<?php echo $row->id; ?>">
+                                                    <i class="fa  fa-info"> [Visi]</i></button>
+
+
+
+                                            </td>
+                                            <td>
+                                                <button type="button" class=" btn btn-info" data-toggle="modal" data-target=".bs-example-modal-lg-misi<?php echo $row->id; ?>">
+                                                    <i class="fa  fa-info"> [Misi]</i></button>
+
+
+
+                                            </td>
+                                            <td style="text-align:center;">
+                                                <?php
+                                                if ($row->status == '1') {
+                                                ?>
+                                                    <h4>
+                                                        <center><a href="#" data-toggle="modal" data-backdrop="false" data-target="#status<?= $row->id ?>" class="mr-1 mb-1 btn btn-outline-success btn-min-width"><i class="la la-check-square-o"></i>
+                                                                Aktif</a>
+                                                        </center>
+                                                    </h4>
+
+                                                <?php
+
+                                                } else {
+                                                ?>
+                                                    <h4>
+                                                        <center> <a href="#" data-toggle="modal" data-backdrop="false" data-target="#status<?= $row->id ?>" class="mr-1 mb-1 btn btn-outline-warning btn-min-width"><i class="la la-times-circle-o"></i>
+                                                                Tidak Aktif</a></center>
+                                                    </h4>
+                                                <?php
+
+                                                }
+                                                ?>
+
+                                            </td>
+                                            <td><?= $row->tgl_create ?></td>
+
+                                            <td style="text-align:center;"><a href="<?= base_url() ?>user/Votting/edit/<?php echo $row->id; ?>" class="btn btn-outline-success">
+                                                    <i class="fa  fa-pencil "></i> Edit
+                                                </a> | <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete<?php echo $row->id; ?>"> <i class="fa  fa-trash "></i> Hapus</button></td>
+
+
+                                        </tr>
+                                </tbody>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <!-- sample modal content -->
+                                            <div class="modal fade bs-example-modal-lg-visi<?php echo $row->id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="myLargeModalLabel"><i class="fa fa-info"></i> Visi Calon Ketua</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        </div>
+
+                                                        <form action="#" method="post" enctype="multipart/form-data">
+
+
+                                                            <div class="modal-body">
+
+                                                                <label class="col-md-12" for="example-text" align="left">Visi Calon Ketua: </label>
+
+                                                                <textarea name="xalasan" rows="8" class="col-md-12" class="form-control" placeholder="Alasan Pengajuan"><?php echo $row->visi; ?></textarea>
+
+                                                            </div>
+
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <!-- /.modal -->
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="card">
+                                            <!-- sample modal content -->
+                                            <div class="modal fade bs-example-modal-lg-misi<?php echo $row->id; ?>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title" id="myLargeModalLabel"><i class="fa fa-info"></i> Visi Calon Ketua</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                        </div>
+
+                                                        <form action="#" method="post" enctype="multipart/form-data">
+
+
+                                                            <div class="modal-body">
+
+                                                                <label class="col-md-12" for="example-text" align="left">Visi Calon Ketua: </label>
+
+                                                                <textarea name="xalasan" rows="8" class="col-md-12" class="form-control" placeholder="misi"><?php echo $row->misi; ?></textarea>
+
+                                                            </div>
+
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <!-- /.modal -->
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            <?php endforeach; ?>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+
 <?php
-defined('BASEPATH') or exit('No direct script access allowed');
 
-class Artikel extends MX_Controller
-{
+foreach ($data->result() as $row) :
 
+?>
 
-    function __construct()
-    {
-        parent::__construct();
-        $this->load->library('form_validation');
-        $this->load->model('M_data');
-        $this->load->library('upload');
-    }
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="form-group">
 
+            <div class="modal fade text-left" id="status<?= $row->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success white">
+                            <h4 class="modal-title white" id="myModalLabel11">Update Status User <?= $row->nama ?></h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
 
-    function index()
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'v_artikel',
-            'data' => $this->M_data->show_artikel(),
-
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
-    function add_artikel()
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'artikel/v_add_artikel',
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
-    function edit_artikel($id)
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'artikel/v_edit_artikel',
-            'data' => $this->db->query("select*from artikel where id_artikel='$id'")->row(),
-        );
-
-        $this->load->view('layout/wrapper', $data);
-    }
-
-    function save_artikel()
-    {
-
-        $judul = $this->input->post('xjudul');
-        $slug = $this->input->post('slug');
-        $kat = $this->input->post('xkategori');
-        $tanggal = $this->input->post('xtanggal');
-        $status = $this->input->post('xstatus');
-        $isi = $this->input->post('xisi');
-        $iduser = $this->session->userdata('id_user');
-
-        $date = date('dmyhis');
-        $tgl = date('Y-m-d H:i:s');
-        $config['upload_path'] = './assets/images/';
-        $config['allowed_types'] = 'jpg|png|jpeg';
-        $config['encrypt_name'] = false;
-        $config['file_name'] = $date;
-
-        $this->upload->initialize($config);
-        //var_dump($this->upload->do_upload('filefoto'));exit();
-        if (!empty($_FILES['filefoto']['name'])) {
-            if ($this->upload->do_upload('filefoto')) {
-                $img_about = $this->upload->data();
-                $image = $img_about['file_name'];
-            }
-            $data = array(
-                "judul" => $judul,
-                "isi_artikel" => $isi,
-                "tgl_post" => $tanggal,
-                "id_kategori" => $kat,
-                "slug" => $slug,
-                "lihat" => '0',
-                "gambar" => $image,
-                "id_user" => $iduser,
-                "status_artikel" => $status,
-
-            );
-            echo $this->session->set_flashdata('message', 'success');
-            $this->M_data->insert_data($data, 'artikel');
-            redirect('artikel-admin.js');
-        }
-    }
-
-    function update_artikel()
-    {
-
-        $xid = $this->input->post('xid');
-        $judul = $this->input->post('xjudul');
-        $slug = $this->input->post('slug');
-        $kat = $this->input->post('xkategori');
-        $tanggal = $this->input->post('xtanggal');
-        $status = $this->input->post('xstatus');
-        $isi = $this->input->post('xisi');
-        $iduser = $this->session->userdata('id_user');
-        $foto_lama = $this->input->post('foto');
-
-        $date = date('dmyhis');
-        $tgl = date('Y-m-d H:i:s');
-        $config['upload_path'] = './assets/images/';
-        $config['allowed_types'] = 'jpg|png|jpeg';
-        $config['encrypt_name'] = false;
-        $config['file_name'] = $date;
-
-        $this->upload->initialize($config);
-        //var_dump($this->upload->do_upload('filefoto'));exit();
-        if (!empty($_FILES['filefoto']['name'])) {
-            unlink('./assets/images/' . $foto_lama);
-
-            if ($this->upload->do_upload('filefoto')) {
-                $img_about = $this->upload->data();
-                $image = $img_about['file_name'];
-            }
-            $where1 = array('id_artikel' => $xid);
-            $data = array(
-                "judul" => $judul,
-                "isi_artikel" => $isi,
-                "tgl_post" => $tanggal,
-                "id_kategori" => $kat,
-                "slug" => $slug,
-                // "lihat" => '0',
-                "gambar" => $image,
-                "id_user" => $iduser,
-                "status_artikel" => $status,
-
-            );
-            echo $this->session->set_flashdata('message', 'success');
-            $this->M_data->update_data($where1, $data, 'artikel');
-            redirect('artikel-admin.js');
-        }
-    }
-    function kategori_artikel()
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'v_kategori_artikel',
-            'data' => $this->db->query(" select*from kategori "),
-
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
+                        <form action="<?php echo base_url() . 'user/Votting/update_status' ?>" method="post">
+                            <div class="modal-body">
+                                <div class="col-md-12 m-b-20">
 
 
-    function add_kategori()
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'kategori/v_add_kategori',
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
+                                    <div class="form-group">
+                                        <label for="accountTextarea">Status</label>
+                                        <input type="hidden" name="xkode" value="<?php echo $row->id; ?>" />
 
-    function edit_kategori($id)
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'kategori/v_edit_kategori',
-            'data' => $this->db->query(" select*from kategori where id_kategori='$id' ")->row(),
+                                        <select class="form-control" name="xstatus" required>
+                                            <option value="1" selected>Aktif</option>
+                                            <option value="2">Tidak Aktif</option>
 
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
 
-    public function save_kategori()
-    {
+                                        </select>
 
-        $nama = $this->input->post('xnama', TRUE);
-        $tgl = date('Y-m-d H:i:s');
-        $data = [
-            "nama_kategori" => $nama,
-            "tgl_create" => $tgl,
-        ];
-        $this->M_data->insert_data($data, 'kategori');
-        echo $this->session->set_flashdata('message', 'success');
-        redirect('kategori-artikel-admin.js');
-    }
+                                    </div>
 
-    public function update_kategori()
-    {
 
-        $id = $this->input->post('xid', TRUE);
-        $nama = $this->input->post('xnama', TRUE);
-        $tgl = date('Y-m-d H:i:s');
-        $where = array('id_kategori' => $id);
-        $data = array(
-            "nama_kategori" => $nama,
-            "tgl_create" => $tgl,
-        );
-        $this->M_data->update_data($where, $data, 'kategori');
-        echo $this->session->set_flashdata('message', 'success');
-        redirect('kategori-artikel-admin.js');
-    }
-    public function hapus_kategori()
-    {
-        $kode = $this->input->post('xkode');
-        $this->db->query("DELETE FROM kategori where id_kategori='$kode'");
-        $this->session->set_flashdata('message', 'warning');
-        redirect('kategori-artikel-admin.js');
-    }
 
-    function hapus_artikel()
-    {
-        $kode = $this->input->post('xkode');
-        $data = $this->input->post('file');
-        $path = './assets/images/' . $data;
-        unlink($path);
-        $this->db->query(" DELETE FROM artikel where id_artikel='$kode' ");
-        echo $this->session->set_flashdata('message', 'warning');
-        redirect('artikel-admin.js');
-    }
-}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-warning">Update</button>
+
+                                <button type="button" class="btn grey btn-outline-danger" data-dismiss="modal">Batal</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="form-group">
+
+            <div class="modal fade text-left" id="delete<?= $row->id ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel11" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-warning">
+                            <h4 class="modal-title white" id="myModalLabel11">Hapus Data</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <form action="<?php echo base_url() . 'user/Votting/hapus' ?>" method="post">
+                            <div class="modal-body">
+                                <div class="col-md-12 m-b-20">
+
+
+                                    <div class="form-group">
+
+                                        <input type="hidden" name="xkode" value="<?php echo $row->id; ?>" />
+                                        <input type="hidden" name="file" value="<?php echo $row->images; ?>" />
+                                        <p>Apakah Anda yakin mau menghapus Data <b><?php echo $row->nama; ?>
+                                            </b> ini ?</p>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-outline-danger">Hapus</button>
+
+                                <button type="button" class="btn grey btn-outline-info" data-dismiss="modal">Batal</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+<?php endforeach; ?>
