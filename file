@@ -1,91 +1,183 @@
-<div class="page-wrapper">
-    <div class="container-fluid">
-        <div class="row page-titles">
-            <div class="col-md-5 align-self-center">
-                <h4 class="text-themecolor">Edit Data</h4>
-            </div>
-            <div class="col-md-7 align-self-center text-right">
-                <div class="d-flex justify-content-end align-items-center">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="javascript:void(0)">Data Calon Ketua</a></li>
-                        <li class="breadcrumb-item active">Edit Calon Ketua</li>
-                    </ol>
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title">Edit Data</h4>
-                        <form action="<?= base_url() ?>user/Votting/update" method="post" enctype="multipart/form-data">
-                            <div class="form-group m-t-40 row">
-                                <input type="hidden" value="<?= $data->id ?>" name="xid">
-                                <label for="example-text-input" class="col-2 col-form-label">Nomor Urut</label>
-                                <div class="col-10">
-                                    <input type="text" class="form-control" value="<?= $data->no_urut ?>" placeholder="Masukan Nomor Urut Calon Ketua" name="xnomor" required>
-
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <label for="example-email-input" class="col-2 col-form-label">Nama Calon Ketua Aptikom</label>
-                                <div class="col-10">
-                                    <input type="text" class="form-control" value="<?= $data->nama ?>" placeholder="Masukan Nama Calon Ketua" name="xnama" required>
-                                </div>
-                            </div>
+class Votting extends MX_Controller
+{
 
 
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->library('form_validation');
+        $this->load->model('M_data');
+        $this->load->library('upload');
+    }
 
-                            <div class="form-group row">
-                                <label for="example-search-input" class="col-2 col-form-label">Status </label>
-                                <div class="col-10">
-                                    <select class="form-control" name="xstatus" required>
-                                        <option value="1">Publish</option>
-                                        <option value="2">Unpublish</option>
-                                    </select>
-                                </div>
-                            </div>
 
-                            <div class="form-group row">
-                                <label for="example-search-input" class="col-2 col-form-label">Visi</label>
-                                <div class="col-10">
-                                    <textarea id="mymce" name="xvisi" rows="8"><?= $data->visi ?></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="example-search-input" class="col-2 col-form-label">Misi</label>
-                                <div class="col-10">
-                                    <textarea id="mymce" name="xmisi" rows="8"><?= $data->misi ?></textarea>
-                                </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="example-search-input" class="col-2 col-form-label">Images Calon</label>
-                                <div class="col-10">
-                                    <?php if (file_exists("assets/images/" . $data->images)) { ?>
-                                        <img src="<?php echo base_url() . 'assets/images/' . $data->images; ?>" alt="" lass="dropify" width="200" height="200">
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <input type="hidden" id="special" name="foto" class="form-control" placeholder="Foto" value="<?php echo $data->images; ?>" required>
-                                    <?php
-                                    } ?>
-                                    <input type="file" id="input-file-now" name="filefoto" accept="application/jpg" />
-                                    <small class="form-text text-muted"></small>
-                                </div>
-                            </div>
+    function index()
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'v_calonketua',
+            'data' => $this->db->query("select*from calon_ketua"),
 
-                            <div class="form-actions">
-                                <button type="submit" class="btn btn-success"> <i class="fa fa-check"></i> Update</button>
-                                <a href="<?= base_url() ?>/calon-ketua-admin.js" button type="button" class="btn btn-danger">Batal </button></a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
+        );
+        $this->load->view('layout/wrapper', $data);
+    }
+    function add()
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'calonketua/v_add_calon',
+            'data' => $this->db->query("select*from calon_ketua"),
 
-    </div>
+        );
+        $this->load->view('layout/wrapper', $data);
+    }
+    function edit($id)
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'calonketua/v_edit_calon',
+            'data' => $this->db->query("select*from calon_ketua where id='$id'")->row(),
 
-</div>
+        );
+        $this->load->view('layout/wrapper', $data);
+    }
+
+    function hasil_votting()
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'v_hasil_votting',
+        );
+        $this->load->view('layout/wrapper', $data);
+    }
+
+
+
+    function save_calon()
+    {
+
+
+        $nomor = $this->input->post('xnomor');
+        $nama = $this->input->post('xnama');
+        $visi = $this->input->post('xvisi');
+        $misi = $this->input->post('xmisi');
+        $status = $this->input->post('xstatus');
+        $iduser = $this->session->userdata('id_user');
+
+        $date = date('dmyhis');
+        $tgl = date('Y-m-d H:i:s');
+        $config['upload_path'] = './assets/images/';
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['encrypt_name'] = false;
+        $config['file_name'] = $date;
+        $this->upload->initialize($config);
+        //var_dump($this->upload->do_upload('filefoto'));exit();
+        if (!empty($_FILES['filefoto']['name'])) {
+            if ($this->upload->do_upload('filefoto')) {
+                $img_about = $this->upload->data();
+                $image = $img_about['file_name'];
+            }
+            $data = array(
+                "no_urut" => $nomor,
+                "nama" => $nama,
+                "visi" => $visi,
+                "misi" => $misi,
+                "images" => $image,
+                "status" => $status,
+                "tgl_create" => $tgl,
+                "id_user" => $iduser,
+
+
+            );
+            // var_dump($data);
+            // die;
+            echo $this->session->set_flashdata('message', 'success');
+            $this->M_data->insert_data($data, 'calon_ketua');
+            redirect('calon-ketua-admin.js');
+        }
+    }
+    function update()
+    {
+        $id = $this->input->post('xid');
+        $nomor = $this->input->post('xnomor');
+        $nama = $this->input->post('xnama');
+        $visi = $this->input->post('xvisi');
+        $misi = $this->input->post('xmisi');
+        $status = $this->input->post('xstatus');
+        $iduser = $this->session->userdata('id_user');
+        $foto_lama = $this->input->post('foto');
+        $date = date('dmyhis');
+        $tgl = date('Y-m-d H:i:s');
+        $config['upload_path'] = './assets/images/';
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['encrypt_name'] = false;
+        $config['file_name'] = $date . $id;
+
+        $this->upload->initialize($config);
+        //var_dump($this->upload->do_upload('filefoto'));exit();
+        if (!empty($_FILES['filefoto']['name'])) {
+            unlink('./assets/images/' . $foto_lama);
+            if ($this->upload->do_upload('filefoto')) {
+                $img_about = $this->upload->data();
+                $image = $img_about['file_name'];
+            }
+            $where = array('id' => $id);
+            $data = array(
+                "no_urut" => $nomor,
+                "nama" => $nama,
+                "visi" => $visi,
+                "misi" => $misi,
+                "images" => $image,
+                "status" => $status,
+                "tgl_create" => $tgl,
+                "id_user" => $iduser,
+
+            );
+            echo $this->session->set_flashdata('message', 'success');
+            $this->M_data->update_data($where, $data, 'calon_ketua');
+            redirect('calon-ketua-admin.js');
+        } else {
+            $where = array('id' => $id);
+            $data = array(
+                "no_urut" => $nomor,
+                "nama" => $nama,
+                "visi" => $visi,
+                "misi" => $misi,
+                // "images" => $image,
+                "tgl_create" => $tgl,
+
+            );
+            echo $this->session->set_flashdata('message', 'success');
+            $this->M_data->update_data($where, $data, 'calon_ketua');
+            redirect('calon-ketua-admin.js');
+        }
+    }
+
+
+
+    function update_status()
+    {
+        $kode = $this->input->post('xkode');
+        $status = $this->input->post('xstatus');
+        $where = array('id' => $kode);
+        $data = array(
+            'status' => $status
+        );
+        echo $this->session->set_flashdata('message', 'info');
+        $this->M_data->update_data($where, $data, 'calon_ketua');
+        redirect('calon-ketua-admin.js');
+    }
+    function hapus()
+    {
+        $kode = $this->input->post('xkode');
+        $data = $this->input->post('file');
+        $path = './assets/images/' . $data;
+        unlink($path);
+        $this->db->query(" DELETE FROM calon_ketua where id='$kode' ");
+        echo $this->session->set_flashdata('message', 'warning');
+        redirect('calon-ketua-admin.js');
+    }
+}
