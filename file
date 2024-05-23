@@ -1,42 +1,270 @@
-<div class="inner-page-banner-area" style="background-image: url('img/banner/5.jpg');">
-    <div class="container">
-        <div class="pagination-area">
-            <h1>E-Votting Calon Ketua</h1>
-            <ul>
-                <li><a href="#">Membership</a> -</li>
-                <li>e-Votting</li>
-            </ul>
-        </div>
-    </div>
-</div>
-<!-- Inner Page Banner Area End Here -->
-<!-- Lecturers Page 1 Area Start Here -->
-<div class="lecturers-page1-area">
-    <div class="container">
-        <div class="row">
-            <?php
-            foreach ($calon->result() as $row) :
-            ?>
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
-                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                    <div class="single-item">
-                        <div class="lecturers1-item-wrapper">
-                            <div class="lecturers-img-wrapper">
-                                <a href="#"><img class="img-responsive" src="<?php echo base_url() . './assets/images/' . $row->images ?>" alt="team"></a>
-                            </div>
-                            <div class="lecturers-content-wrapper">
-                                <h3 class="item-title"><a href="#"><?= $row->nama ?></a></h3>
-                                <ul class="lecturers-social">
-                                    <a href="#" class="view-all-accent-btn">Detail Calon</a>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+class Home extends MX_Controller
+{
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->model('M_data');
+		$this->load->library('upload');
+	}
+	public function index()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'index',
+			'slider' => $this->db->query("select*from slider where status_images='1'"),
+			'artikel' => $this->db->query("SELECT a.*, b.nama_kategori,c.nama_user
+			FROM artikel AS a
+			LEFT JOIN tbl_kategori AS b ON a.id_kategori=b.id_kategori 
+			LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order by a.id_artikel desc limit 3 "),
 
+			'konferensi' => $this->db->query("SELECT a.*, b.nama_konfrens,c.nama_user
+            FROM konferensi AS a
+            LEFT JOIN kategori_konfrens AS b ON a.id_kategori=b.id_konfrens 
+            LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order by a.id_artikel desc limit 3 "),
+
+			'latepost_artikel' => $this->db->query("SELECT a.*, b.nama_kategori,c.nama_user
+FROM artikel AS a
+LEFT JOIN tbl_kategori AS b ON a.id_kategori=b.id_kategori 
+LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order by a.id_artikel asc limit 3 "),
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
 
+	public function sejarah()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_sejarah',
+			'data' => $this->db->query("select*from sejarah_aptikom")->row(),
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
 
-        </div>
-    </div>
+	public function visimisi()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_visimisi',
+			'data' => $this->db->query("select*from visimisi_aptikom")->row(),
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	public function tugasfungsi()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_tugasfungsi',
+			'data' => $this->db->query("select*from tujuanft_aptikom")->row(),
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	public function Struktur()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_struktur',
+			'data' => $this->db->query("select*from struktur_aptikom")->row(),
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	public function keanggotaan()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_keanggotaan',
+			'data' => $this->db->query("select*from anggota"),
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+	public function Data_prodi()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_data_prodi',
+			'data' => $this->db->query("select*from prodi"),
+			'aktif' => $this->db->query("select count(id_prodi) as jumlah from prodi where status_prodi='1'")->row(),
+			'nonaktif' => $this->db->query("select count(id_prodi) as jumlah from prodi where status_prodi='2'")->row(),
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+	public function Data_grafik()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_data_grafik',
+			'data' => $this->db->query("select*from prodi"),
+			'aktif' => $this->db->query("select count(id_prodi) as jumlah from prodi where status_prodi='1'")->row(),
+			'nonaktif' => $this->db->query("select count(id_prodi) as jumlah from prodi where status_prodi='2'")->row(),
+
+
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	public function Data_anggota()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_grafik_Anggota',
+			'aktifanggota' => $this->db->query("select count(id) as jumlah from anggota where status_anggota='1'")->row(),
+			'nonaktifanggota' => $this->db->query("select count(id) as jumlah from anggota where status_anggota='2'")->row(),
+
+			'aktifprodi' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='1'")->row(),
+			'nonaktifprodi' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='2'")->row(),
+
+
+			'CalonA' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='1'")->row(),
+			'CalonB' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='2'")->row(),
+
+
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+
+	public function evotting()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_evotting',
+			'calon' => $this->db->query("select*from calon_ketua where status='1'"),
+
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+	public function daftar_anggota()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_daftar_anggota',
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	public function login()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_login',
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	public function kontak()
+	{
+		$data = array(
+			'title' => 'Sistem Informasi Aptikom',
+			'conten' => 'v_kontak',
+		);
+		$this->load->view('layout/wrapper', $data);
+	}
+
+	function register_anggota()
+	{
+		$id = $this->input->post('xid', true);
+		$nama = strip_tags(htmlspecialchars($this->input->post('xnama', true), ENT_QUOTES));
+		$nohp = $this->input->post('xnohp', true);
+		$email = $this->input->post('xemail', true);
+		$tgl = date('Y-m-d H:i:s');
+		$password_user = 'aptikom';
+		$pass_md5 = md5($password_user);
+		$pass_64 = base64_encode($password_user);
+		$config['upload_path'] = './assets/dokumen/';
+		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
+		$config['max_size'] = '1048';
+		$config['encrypt_name'] = false;
+		$config['file_name'] = 'IDcar-' . $id;
+
+		$this->upload->initialize($config);
+		if (!empty($_FILES['filedokumen']['name'])) {
+			if ($this->upload->do_upload('filedokumen')) {
+				$img_about = $this->upload->data();
+				$file = $img_about['file_name'];
+			}
+			$data = [
+				"id_anggota" => $id,
+				"nama_anggota" => $nama,
+				"nohp" => $nohp,
+				"email" => $email,
+				"verifikasi" => '2',
+				"status_anggota" => '2',
+				"pass" => $pass_md5,
+				"pass_64" => $pass_64,
+				"file_anggota" => $file,
+				"create_at" => $tgl,
+			];
+			// var_dump($data);
+			// die;
+			echo $this->session->set_flashdata('message', 'success');
+			$this->M_data->insert_data($data, 'anggota');
+			redirect('login.js');
+		}
+		echo $this->session->set_flashdata('message', 'error');
+		redirect('daftar-anggota.js');
+	}
+
+	function register_anggotaProdi()
+	{
+		$id = $this->input->post('xid', true);
+		$nama = strip_tags(htmlspecialchars($this->input->post('xnama', true), ENT_QUOTES));
+		$nohp = $this->input->post('xnohp', true);
+		$email = $this->input->post('xemail', true);
+		$pts = $this->input->post('xpts', true);
+		$prodi = $this->input->post('xprodi', true);
+		$tgl = date('Y-m-d H:i:s');
+		$password_user = 'aptikom';
+		$pass_md5 = md5($password_user);
+		$pass_64 = base64_encode($password_user);
+
+
+		$config['upload_path'] = './assets/dokumen/';
+		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
+		$config['max_size'] = '2048';
+		$config['encrypt_name'] = false;
+		$config['file_name'] = 'IDcar-' . $id;
+
+		$this->upload->initialize($config);
+		if (!empty($_FILES['filedokumen']['name'])) {
+			if ($this->upload->do_upload('filedokumen')) {
+				$img_about = $this->upload->data();
+				$file = $img_about['file_name'];
+			}
+			$data = [
+				"id_anggota" => $id,
+				"nama_anggota" => $nama,
+				"nohp" => $nohp,
+				"email" => $email,
+				"pts" => $pts,
+				"prodi" => $prodi,
+				"verifikasi" => '2',
+				"status_anggota" => '2',
+				"pass" => $pass_md5,
+				"pass_64" => $pass_64,
+				"file_anggota" => $file,
+				"create_at" => $tgl,
+			];
+			// var_dump($data);
+			// die;
+			echo $this->session->set_flashdata('message', 'success');
+			$this->M_data->insert_data($data, 'anggota_prodi');
+			redirect('login.js');
+		}
+		echo $this->session->set_flashdata('message', 'error');
+		redirect('daftar-anggota.js');
+	}
+}
