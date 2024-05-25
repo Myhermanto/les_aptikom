@@ -1,110 +1,141 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-12 align-self-center">
 
-class Votting extends MX_Controller
-{
+            </div>
 
+        </div>
 
-    function __construct()
-    {
-        parent::__construct();
-        $this->load->library('form_validation');
-        $this->load->model('M_data');
-    }
+        <?php
+        error_reporting(0);
+        $username = $this->session->userdata('username');
+        $query = $this->db->query("SELECT * FROM `detail_votting` WHERE `id_anggota`='$username';");
+        $cek_votting = $query->num_rows();
 
-
-    function index()
-    {
-        $id = $this->session->userdata('id_anggota');
-        $pe             = $this->db->query("SELECT * FROM anggota WHERE id_anggota='$id'")->row();
-        if ($pe->lahir_tempat == '' || $pe->lahir_tanggal == '' || $pe->jns_k == '' || $pe->nohp == '' || $pe->email == '') {
-            $this->session->set_flashdata('error', 'Pengisian data belum lengkap');
-            redirect(base_url() . 'data-pribadi-anggota.js');
-            die;
+        $hasil = $this->db->query("SELECT * FROM calon_ketua ")->result();
+        $hasil11 = $this->db->query("SELECT nama FROM calon_ketua")->result();
+        foreach ($hasil11 as $nm) {
+            $caln .= ",'$nm->nama'";
         }
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'v_calonketua',
-            'datacalon' => $this->db->query("SELECT * FROM calon_ketua WHERE status='1'"),
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
+        foreach ($hasil as $vot) {
+            $hasilvot = $vot->id;
+            $nm = $vot->nama;
+            $hasil1 = $this->db->query("SELECT COUNT(jumlah_vot) AS hasilvotting FROM detail_votting where id_calon='$hasilvot' and status_vot='2'")->result();
 
-    function vottingcalon()
-    {
-        $iduser = $this->session->userdata('username');
-        $idvoting = $this->input->post('xkode', TRUE);
-        $tgl = date('Y-m-d H:i:s');
-        $cek = $this->db->get_where('detail_votting', array('id_anggota' => $iduser));
-        if ($cek->num_rows() <= 0) {
-
-            $data = [
-                "id_calon" => $idvoting,
-                "id_anggota" => $iduser,
-                "jumlah_vot" => 1,
-                "tgl_vot" => $tgl,
-                "status_vot" => 2,
-            ];
-            $this->M_data->insert_data($data, 'detail_votting');
-            echo $this->session->set_flashdata('message', 'success');
-            redirect('data-calon-ketua-anggota.js');
-        } else {
-            echo $this->session->set_flashdata('message', 'info');
-            redirect('data-calon-ketua-anggota.js');
+            foreach ($hasil1 as $jum1) {
+                $jumvoti .= ",$jum1->hasilvotting";
+            }
         }
-    }
+
+        $hasiloke1 = substr($jumvoti, 1);
+        $hasiloke = substr($jumvoti, 1);
+        $namaclo = substr($caln, 1);
+        ?>
+
+        <div class="card">
+            <div class="card-body">
+                <center> <b> Anda Sudah Memilih &nbsp;</b>
+                    <h3><b class='text-danger'><?php echo $hasilvoting->no_urut ?> -
+                            &nbsp;<?php echo $hasilvoting->nama ?></b></h3>&nbsp; <b>Sebagai Calon Ketua
+                        Periode tahun 2024-2028</b>
+                </center>.
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title m-b-0">History Voting</h5>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nomor Calon</th>
+                                        <th>Nama Calon</th>
+                                        <th style="text-align: right;">Tanggal Voting</th>
 
 
-    function hasil_votting()
-    {
-        $iduser = $this->session->userdata('username');
+                                    </tr>
+                                </thead>
 
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'v_detail_vot',
-            'hasil' => $this->db->query("SELECT a.id_calon,a.jumlah_vot,a.tgl_vot,
-            b.nama,b.no_urut,b.images,c.nama_anggota,c.id_anggota
-                        
-                        FROM detail_votting a
-                         LEFT JOIN calon_ketua b ON a.id_calon = b.id
-                          LEFT JOIN anggota  c ON a.id_anggota=c.id_anggota
-                        WHERE a.id_anggota='$iduser'")->row(),
+                                <tbody>
 
-        );
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td><?= $hasilvoting->no_urut ?></td>
+                                        <td><?= $hasilvoting->nama ?></td>
+                                        <td style="text-align: right;">
+                                            <?= $hasilvoting->tgl_vot ?></td>
+                                    </tr>
 
-        $this->load->view('layout/wrapper', $data);
-    }
 
-    function updatepribadi()
-    {
-        $nidn = $this->session->userdata('username');
-        $id = $this->input->post('xid', true);
-        $nama = $this->input->post('xnama', true);
-        $lhir_tmp = $this->input->post('xtmplh', true);
-        $lhir_tgl = $this->input->post('xtgllh', true);
-        $jnsk = $this->input->post('xjk', true);
-        $nohp = $this->input->post('xnohp', true);
-        $email = $this->input->post('xemail', true);
-        $pts = $this->input->post('xkmpus', true);
-        $prodi = $this->input->post('xilmu', true);
-        $masa = $this->input->post('xmasa', true);
-        $tgl_create = date("y-m-d H:i:s");
-        $where1 = array('id_anggota' => $id);
-        $data = array(
-            'nama_anggota' => $nama,
-            'lahir_tempat' => $lhir_tmp,
-            'lahir_tanggal' => $lhir_tgl,
-            'jns_k' => $jnsk,
-            'nohp' => $nohp,
-            'email' => $email,
-            'pts' => $pts,
-            'prodi' => $prodi,
-            'masa_berlaku' => $masa,
-            'create_at' => $tgl_create,
-        );
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        $this->M_data->update_data($where1, $data, 'anggota');
-        echo $this->session->set_flashdata('message', 'info');
-        redirect('data-pribadi-anggota.js');
-    }
-}
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+
+                        <h4 class="card-title">Prosentase Suara Calon Ketua</h4>
+
+                        <!-- <canvas id="canvas" width="400" height="400" ></canvas> -->
+                        <canvas id="myChartvotting" width="200" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+
+
+
+
+
+
+    </div>
+</div>
+
+
+
+<script>
+    var ctx = document.getElementById("myChartvotting").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [<?= $namaclo ?>],
+            datasets: [{
+                label: ' Grafik Hasil E-Votting',
+                data: [<?= $hasiloke ?>],
+                backgroundColor: [
+                    'rgba(255, 99, 132)',
+                    'rgba(31, 153, 235)'
+                ],
+                borderColor: [
+                    'rgba(255, 73, 112)',
+                    'rgba(0, 140, 235)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
