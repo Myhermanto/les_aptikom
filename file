@@ -1,71 +1,70 @@
-<div class="page-wrapper">
-    <div class="container-fluid">
-        <div class="row page-titles">
-            <div class="col-md-12 align-self-center">
+<?php
+defined('BASEPATH') or exit('No direct script access allowed');
 
-            </div>
-
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                <center> <b> Anda Sudah Memilih &nbsp;</b>
-                    <h3><b class='text-danger'><?php echo $hasil->no_urut ?> -
-                            &nbsp;<?php echo $hasil->nama ?></b></h3>&nbsp; <b>Sebagai Calon Ketua
-                        Periode tahun 2024-2028</b>
-                </center>.
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title m-b-0">History Voting</h5>
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Nomor Calon</th>
-                                        <th>Nama Calon</th>
-                                        <th style="text-align: right;">Tanggal Voting</th>
+class Votting extends MX_Controller
+{
 
 
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td><?= $hasil->no_urut ?></td>
-                                        <td><?= $hasil->nama ?></td>
-                                        <td style="text-align: right;">
-                                            <?= $hasil->tgl_vot ?></td>
-                                    </tr>
+    function __construct()
+    {
+        parent::__construct();
+        $this->load->library('form_validation');
+        $this->load->model('M_data');
+    }
 
 
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    function index()
+    {
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'v_calonketua',
+            'datacalon' => $this->db->query("SELECT * FROM calon_ketua WHERE status='1'"),
+        );
+        $this->load->view('layout/wrapper', $data);
+    }
+
+    function vottingcalon()
+    {
+        $iduser = $this->session->userdata('username');
+        $idvoting = $this->input->post('xkode', TRUE);
+        $tgl = date('Y-m-d H:i:s');
+        $cek = $this->db->get_where('detail_votting', array('id_anggota' => $iduser));
+        if ($cek->num_rows() <= 0) {
+
+            $data = [
+                "id_calon" => $idvoting,
+                "id_anggota" => $iduser,
+                "jumlah_vot" => 1,
+                "tgl_vot" => $tgl,
+                "status_vot" => 2,
+            ];
+            $this->M_data->insert_data($data, 'detail_votting');
+            echo $this->session->set_flashdata('message', 'success');
+            redirect('data-calon-ketua-anggota.js');
+        } else {
+            echo $this->session->set_flashdata('message', 'info');
+            redirect('data-calon-ketua-anggota.js');
+        }
+    }
 
 
+    function hasil_votting()
+    {
+        $iduser = $this->session->userdata('username');
 
+        $data = array(
+            'title' => 'Sistem Informasi Aptikom',
+            'conten' => 'v_detail_vot',
+            'hasil' => $this->db->query("SELECT a.id_calon,a.jumlah_vot,a.tgl_vot,
+            b.nama,b.no_urut,b.images,c.nama_anggota,c.id_anggota
+                        
+                        FROM detail_votting a
+                         LEFT JOIN calon_ketua b ON a.id_calon = b.id
+                          LEFT JOIN anggota  c ON a.id_anggota=c.id_anggota
+                        WHERE a.id_anggota='$iduser'")->row(),
 
+        );
 
-
-        </div>
-
-
-
-
-
-
-
-
-    </div>
-</div>
+        $this->load->view('layout/wrapper', $data);
+    }
+}
