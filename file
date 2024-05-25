@@ -1,52 +1,139 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
+<div class="page-wrapper">
+    <div class="container-fluid">
+        <div class="row page-titles">
+            <div class="col-md-12 align-self-center">
 
-class Dashboard extends MX_Controller
-{
+            </div>
 
-
-    function __construct()
-    {
-        parent::__construct();
-
-        if ($this->session->userdata('logged_in') != true) {
-            $url = base_url('login-admin.js');
-            redirect($url);
-        };
-
-        $this->load->library('form_validation');
-        $this->load->model('M_data');
-    }
+        </div>
 
 
-    function index()
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Aptikom',
-            'conten' => 'v_dashboard',
-            'anggota' => $this->db->query("SELECT COUNT(id) AS jumlah FROM anggota")->row(),
-            'anggotaprodi' => $this->db->query("SELECT COUNT(id) AS jumlah FROM anggota_prodi")->row(),
-            'prodi' => $this->db->query("SELECT COUNT(id_prodi) AS jumlah FROM prodi")->row(),
-            'userakses' => $this->db->query("SELECT COUNT(id_user) AS jumlah FROM tbl_user")->row(),
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
+        <div class="card-group">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="d-flex no-block align-items-center">
+                                <div>
+                                    <h3><i class="fa fa-users"></i></h3>
 
-    function show_user()
-    {
-        $data = array(
-            'title' => 'Sistem Informasi Pegawai',
-            'conten' => 'v_show_user',
-            'data' => $this->M_data->show_user(),
-        );
-        $this->load->view('layout/wrapper', $data);
-    }
+                                    <h5 class="counter text-danger"><b>Anggota Individu</b></h5></a>
+                                </div>
+                                <div class="ml-auto">
+                                    <h2 class="counter text-primary"><?= $anggota->jumlah ?></h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
 
-    function logout()
-    {
-        $this->session->sess_destroy();
-        $this->session->set_flashdata('message', 'info');
-        $url = base_url('login.js');
-        redirect($url);
-    }
-}
+                            <h5 class="counter text-danger"><i class="fa    fa-hand-o-right"> <a href="#" class="counter text-danger">Lihat Data</a></i></h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="d-flex no-block align-items-center">
+                                <div>
+                                    <h3><i class="fa fa-building"></i></h3>
+
+                                    <h5 class="counter text-warning"><b>Anggota Prodi</b></h5></a>
+                                </div>
+                                <div class="ml-auto">
+                                    <h2 class="counter text-warning"><?= $anggotaprodi->jumlah ?></h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+
+                            <h5 class="counter text-warning"><i class="fa fa-hand-o-right"> <a href="#" class="counter text-warning"> Lihat Data</a></i></h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Column -->
+            <!-- Column -->
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="d-flex no-block align-items-center">
+                                <div>
+                                    <h3><i class="fa fa-list"></i></h3>
+
+                                    <h5 class="counter text-info"><b>Data Prodi</b></h5></a>
+                                </div>
+                                <div class="ml-auto">
+                                    <h2 class="counter text-info"><?= $prodi->jumlah ?></h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+
+                            <h5 class="counter text-info"><i class="fa    fa-hand-o-right"> <a href="#" class="counter text-info"> Lihat Data</a></i></h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="d-flex no-block align-items-center">
+                                <div>
+                                    <h3><i class="fa fa-user"></i></h3>
+
+                                    <h5 class="counter text-success"><b>User & Akses</b></h5></a>
+                                </div>
+                                <div class="ml-auto">
+                                    <h2 class="counter text-success"><?= $userakses->jumlah ?>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+
+                            <h5 class="counter text-success"><i class="fa    fa-hand-o-right"> <a href="#" class="counter text-success"> Lihat Data</a></i></h5>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <?php $nama = $this->session->userdata('nama_user'); ?>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Selamat Datang di Aplikasi <?= $title ?> &nbsp;<b class='text-danger'><?= $nama ?></b></h5>
+
+            </div>
+        </div>
+        <div class="row">
+            <!-- Column -->
+            <div class="col-lg-12 col-md-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Informasi Terbaru:</h5>
+                        <h6><b class='text-danger'>XX </b><br>XX
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
