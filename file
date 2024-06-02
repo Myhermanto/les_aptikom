@@ -124,7 +124,7 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 			'title' => $about->judul,
 			'about' => $this->db->query("select*from about_website")->row(),
 			'conten' => 'v_keanggotaan',
-			'data' => $this->db->query("select*from anggota"),
+			'data' => $this->db->query("select*from anggota_prodi where status_anggota='1' and verifikasi='1'"),
 
 		);
 		$this->load->view('layout/wrapper', $data);
@@ -137,7 +137,7 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 			'title' => $about->judul,
 			'about' => $this->db->query("select*from about_website")->row(),
 			'conten' => 'v_keanggotaan_prodi',
-			'data' => $this->db->query("select*from anggota_prodi"),
+			'data' => $this->db->query("select*from anggota_prodi where status_anggota='1' and verifikasi='1'"),
 
 		);
 		$this->load->view('layout/wrapper', $data);
@@ -179,8 +179,8 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 			'title' => $about->judul,
 			'about' => $this->db->query("select*from about_website")->row(),
 			'conten' => 'v_grafik_Anggota',
-			'aktifanggota' => $this->db->query("select count(id) as jumlah from anggota where status_anggota='1'")->row(),
-			'nonaktifanggota' => $this->db->query("select count(id) as jumlah from anggota where status_anggota='2'")->row(),
+			'aktifanggota' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='1'")->row(),
+			'nonaktifanggota' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='2'")->row(),
 
 			'aktifprodi' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='1'")->row(),
 			'nonaktifprodi' => $this->db->query("select count(id) as jumlah from anggota_prodi where status_anggota='2'")->row(),
@@ -262,6 +262,13 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 		$password_user = 'aptikom';
 		$pass_md5 = md5($password_user);
 		$pass_64 = base64_encode($password_user);
+		$cek = $this->db->query("SELECT * FROM anggota_prodi WHERE id_anggota='$id'")->row();
+
+		if ($cek->id_anggota > 0) {
+			$this->session->set_flashdata('message', 'info');
+			redirect(base_url() . 'login.js');
+			die;
+		}
 		$config['upload_path'] = './assets/dokumen/';
 		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
 		$config['max_size'] = '1048';
@@ -285,13 +292,16 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 				"pass_64" => $pass_64,
 				"file_anggota" => $file,
 				"create_at" => $tgl,
+				"jns_anggota" => '1',
+
 			];
 			// var_dump($data);
 			// die;
 			echo $this->session->set_flashdata('message', 'success');
-			$this->M_data->insert_data($data, 'anggota');
+			$this->M_data->insert_data($data, 'anggota_prodi');
 			redirect('login.js');
 		}
+
 		echo $this->session->set_flashdata('message', 'error');
 		redirect('daftar-anggota.js');
 	}
@@ -308,8 +318,12 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 		$password_user = 'aptikom';
 		$pass_md5 = md5($password_user);
 		$pass_64 = base64_encode($password_user);
+		$cek = $this->db->query("SELECT * FROM anggota_prodi WHERE id_anggota='$id'")->row();
 
-
+		if ($cek->id_anggota > 0) {
+			$this->session->set_flashdata('message', 'info');
+			redirect(base_url() . 'login.js');
+		}
 		$config['upload_path'] = './assets/dokumen/';
 		$config['allowed_types'] = 'gif|jpg|png|jpeg|bmp|pdf';
 		$config['max_size'] = '2048';
@@ -335,6 +349,7 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 				"pass_64" => $pass_64,
 				"file_anggota" => $file,
 				"create_at" => $tgl,
+				"jns_anggota" => '2',
 			];
 			// var_dump($data);
 			// die;
@@ -342,6 +357,7 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 			$this->M_data->insert_data($data, 'anggota_prodi');
 			redirect('login.js');
 		}
+
 		echo $this->session->set_flashdata('message', 'error');
 		redirect('daftar-anggota.js');
 	}
@@ -472,7 +488,7 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 			'title' => $about->judul,
 			'about' => $this->db->query("select*from about_website")->row(),
 			'conten' => 'v_agenda_detail',
-			'data' =>  $this->db->query("SELECT a.*, b.nama_konfrens,c.nama_user
+			'data' =>  $this->db->query("SELECT a.*, b.nama_konfrens,b.slug as slugkat,c.nama_user
             FROM konferensi AS a
             LEFT JOIN kategori_konfrens AS b ON a.id_kategori=b.id_konfrens 
             LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.slug='$slug' ")->row(),
@@ -494,8 +510,8 @@ LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where a.status_artikel='1' order 
 		$data = array(
 			'title' => $about->judul,
 			'about' => $this->db->query("select*from about_website")->row(),
-			'conten' => 'v_agenda_detail',
-			'data' =>  $this->db->query("SELECT a.*, b.*,c.nama_user
+			'conten' => 'v_agenda_kategori',
+			'data' =>  $this->db->query("SELECT a.*, b.nama_konfrens,b.slug as slugkat,c.nama_user
             FROM konferensi AS a
             LEFT JOIN kategori_konfrens AS b ON a.id_kategori=b.id_konfrens 
             LEFT JOIN tbl_user AS c ON a.id_user=c.id_user where b.slug='$slug' "),
